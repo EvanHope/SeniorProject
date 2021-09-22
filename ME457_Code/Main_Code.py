@@ -27,12 +27,12 @@ fh.write(header_string)
 fh.close()
 
 
-print "Initializing ADC"
+print("Initializing ADC")
 navio.util.check_apm()
 adc = navio.adc.ADC()
 analog = [0] * adc.channel_count
 
-print "Initializing Sensors"
+print ("Initializing Sensors")
 imu = navio.mpu9250.MPU9250()
 imu.initialize()
 rcin = navio.rcinput.RCInput()
@@ -61,13 +61,13 @@ time.sleep(1)
 
 
 if imu.testConnection():
-    print "Connection established: True"
+    print ("Connection established: True")
 else:
     sys.exit("Connection established: False")
     
 accels, rates, m9m = imu.getMotion9()
 if m9m[0] == 0:
-	print "WARNING: Mag reading zeros, try rebooting Navio"
+	print ("WARNING: Mag reading zeros, try rebooting Navio")
 	led.setColor('Magenta')
 
 mag_calibration_flag = False # True means run calibration, 
@@ -140,7 +140,7 @@ accels2 = [0,0,0]
 #------------------------------------------------#
 ###       Declare global variables here        ###
 
-print "Starting main loop: here we go!"
+print ("Starting main loop: here we go!")
 while True:
 	current_time = time.clock()*1000.0
 	if m9m[0] == 0:
@@ -194,7 +194,7 @@ while True:
 		# Output commands
 		# 		motor_front, motor_back, motor_left, motor_right are the 4 motor commands
 		# 		motor range is from 1.000 to 2.000 (1.000 is 0% power)
-		print accels[1]
+		print(accels[1])
 		
 		# R/C Input 
 		# 		rc_data variable stores all RC inputs (range is [0]-[5])
@@ -266,7 +266,7 @@ while True:
 	if (current_time - timer_1hz) >= 1000.0:
 		# Customizable display message #
 		#print "Angles:", "{:+3.2f}".format(roll*57.32), "{:+3.2f}".format(pitch*57.32), "{:+3.2f}".format(yaw*57.32)
-		print accels[0]
+		print(accels[0])
 		#print "Analogs:", analog[0], analog[1], analog[2], analog[3], analog[4]
 		#print "Altitude:", current_alt
 		#print pitch_angle_gyro
