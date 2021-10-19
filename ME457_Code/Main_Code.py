@@ -5,13 +5,13 @@ import argparse
 import sys
 import navio.util
 #import AccelGyroMag
-#import navio.mpu9250 # For magnetometer calibration only
+import navio.mpu9250 # For magnetometer calibration only
 import madgwickahrs.madgwickahrs as attitude
 import navio.pwm
 import navio.adc
 import navio.leds
 #import GPS
-#import numpy as np
+import numpy as np
 import navio.ms5611
 import os
 import navio.rcinput
