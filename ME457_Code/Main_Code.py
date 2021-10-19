@@ -4,8 +4,8 @@ import math
 import argparse 
 import sys
 import navio.util
-import AccelGyroMag
-import navio.mpu9250 # For magnetometer calibration only
+#import AccelGyroMag
+#import navio.mpu9250 # For magnetometer calibration only
 import madgwickahrs.madgwickahrs as attitude
 import navio.pwm
 import navio.adc
