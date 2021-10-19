@@ -11,7 +11,7 @@ import navio.pwm
 import navio.adc
 import navio.leds
 #import GPS
-import numpy as np
+#import numpy as np
 import navio.ms5611
 import os
 import navio.rcinput
