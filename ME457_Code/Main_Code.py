@@ -43,19 +43,19 @@ AHRS_data = attitude.AHRS(0.01) #100Hz sensor attitude estimation FIXED
 #for ind in range(0, 10):
 #	GPS.enable_posllh()
 led = navio.leds.Led()
-baro = navio.ms5611.MS5611()
-baro.initialize()
-time.sleep(0.25)
-baro.refreshPressure()
-time.sleep(0.01) # Waiting for pressure data ready 10ms
-baro.readPressure()
-baro.refreshTemperature()
-time.sleep(0.01) # Waiting for temperature data ready 10ms
-baro.readTemperature()
-baro.calculatePressureAndTemperature()
-ground_alt = 0
-if baro.PRES < 1013: # small check in case barometer pressure is invalid
-	ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
+#baro = navio.ms5611.MS5611()
+#baro.initialize()
+#time.sleep(0.25)
+#baro.refreshPressure()
+#time.sleep(0.01) # Waiting for pressure data ready 10ms
+#baro.readPressure()
+#baro.refreshTemperature()
+#time.sleep(0.01) # Waiting for temperature data ready 10ms
+#baro.readTemperature()
+#baro.calculatePressureAndTemperature()
+#ground_alt = 0
+#if baro.PRES < 1013: # small check in case barometer pressure is invalid
+#	ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
 
 led.setColor('Red')
 print ("test1")
