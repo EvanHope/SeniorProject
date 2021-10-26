@@ -34,14 +34,6 @@ analog = [0] * adc.channel_count
 
 print ("Initializing Sensors")
 imu = navio.mpu9250.MPU9250()
-
-
-if imu.testConnection():
-    print "Connection established: True"
-else:
-    sys.exit("Connection established: False")
-
-
 imu.initialize()
 time.sleep(1)
 rcin = navio.rcinput.RCInput()
