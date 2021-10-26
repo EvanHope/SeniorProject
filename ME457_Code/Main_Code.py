@@ -228,7 +228,7 @@ while True:
 	if (current_time - timer_50hz) >= 20.0:
 		
 		print "This is printing at 50Hz"
-		led.setColor('blue')
+		led.setColor('yellow')
 		
 		
 		timer_50hz = current_time
