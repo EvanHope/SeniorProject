@@ -58,11 +58,9 @@ if baro.PRES < 1013: # small check in case barometer pressure is invalid
 	ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
 
 led.setColor('Red')
-print ("test1")
 
 time.sleep(1)
 
-print ("test")
 if imu.testConnection():
     print ("Connection established: True")
 else:
