@@ -235,7 +235,7 @@ while True:
 	
 	if (current_time - timer_25hz) >= 40.0:
 		
-		
+		print "This is printing at 25Hz"
 		
 		
 		timer_25hz = current_time
