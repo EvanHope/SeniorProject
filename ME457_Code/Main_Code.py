@@ -65,7 +65,8 @@ print ("test")
 if imu.testConnection():
     print ("Connection established: True")
 else:
-    sys.exit("Connection established: False")
+	print ("Connection failed")
+    #sys.exit("Connection established: False")
     
 accels, rates, m9m = imu.getMotion9()
 if m9m[0] == 0:
