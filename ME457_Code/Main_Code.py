@@ -199,8 +199,8 @@ while True:
 		# Output commands
 		# 		motor_front, motor_back, motor_left, motor_right are the 4 motor commands
 		# 		motor range is from 1.000 to 2.000 (1.000 is 0% power)
-		#print(accels[1])
-		print(current_alt[0])
+		print(accels[1])
+
 		
 		# R/C Input 
 		# 		rc_data variable stores all RC inputs (range is [0]-[5])
