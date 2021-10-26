@@ -59,7 +59,7 @@ if baro.PRES < 1013: # small check in case barometer pressure is invalid
 led.setColor('Red')
 print ("test1")
 
-time.sleep(10)
+time.sleep(1)
 
 print ("test")
 if imu.testConnection():
