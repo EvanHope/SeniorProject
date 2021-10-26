@@ -5,7 +5,7 @@ import argparse
 import sys
 import navio.mpu9250 # For magnetometer calibration only
 import navio.util
-import AccelGyroMag
+#import AccelGyroMag
 import madgwickahrs.madgwickahrs as attitude
 import navio.pwm
 import navio.adc
@@ -34,13 +34,6 @@ analog = [0] * adc.channel_count
 
 print ("Initializing Sensors")
 imu = navio.mpu9250.MPU9250()
-
-print ("test")
-if imu.testConnection():
-    print ("Connection established: True")
-else:
-    sys.exit("Connection established: False")
-
 imu.initialize()
 time.sleep(1)
 rcin = navio.rcinput.RCInput()
@@ -52,13 +45,13 @@ AHRS_data = attitude.AHRS(0.01) #100Hz sensor attitude estimation FIXED
 led = navio.leds.Led()
 baro = navio.ms5611.MS5611()
 baro.initialize()
-#time.sleep(0.25)
-#baro.refreshPressure()
-#time.sleep(0.01) # Waiting for pressure data ready 10ms
-#baro.readPressure()
-#baro.refreshTemperature()
-#time.sleep(0.01) # Waiting for temperature data ready 10ms
-#baro.readTemperature()
+time.sleep(0.25)
+baro.refreshPressure()
+time.sleep(0.01) # Waiting for pressure data ready 10ms
+baro.readPressure()
+baro.refreshTemperature()
+time.sleep(0.01) # Waiting for temperature data ready 10ms
+baro.readTemperature()
 baro.calculatePressureAndTemperature()
 ground_alt = 0
 if baro.PRES < 1013: # small check in case barometer pressure is invalid
