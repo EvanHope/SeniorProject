@@ -200,6 +200,9 @@ while True:
 		# 		motor_front, motor_back, motor_left, motor_right are the 4 motor commands
 		# 		motor range is from 1.000 to 2.000 (1.000 is 0% power)
 		print(accels[1])
+
+		led.setColor('Magenta')
+
 		
 		# R/C Input 
 		# 		rc_data variable stores all RC inputs (range is [0]-[5])
@@ -228,7 +231,6 @@ while True:
 	if (current_time - timer_50hz) >= 20.0:
 		
 		print "This is printing at 50Hz"
-		led.setColor('Magenta')
 		
 		
 		timer_50hz = current_time
@@ -272,7 +274,7 @@ while True:
 	if (current_time - timer_1hz) >= 1000.0:
 		# Customizable display message #
 
-		led.setColor('Green')
+		#led.setColor('Green')
 
 
 		#print "Angles:", "{:+3.2f}".format(roll*57.32), "{:+3.2f}".format(pitch*57.32), "{:+3.2f}".format(yaw*57.32)
