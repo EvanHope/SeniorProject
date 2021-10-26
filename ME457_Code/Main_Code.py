@@ -43,7 +43,7 @@ AHRS_data = attitude.AHRS(0.01) #100Hz sensor attitude estimation FIXED
 #	GPS.enable_posllh()
 led = navio.leds.Led()
 baro = navio.ms5611.MS5611()
-baro.initialize()
+#baro.initialize()
 time.sleep(0.25)
 baro.refreshPressure()
 time.sleep(0.01) # Waiting for pressure data ready 10ms
