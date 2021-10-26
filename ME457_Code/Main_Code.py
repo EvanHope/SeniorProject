@@ -34,7 +34,7 @@ analog = [0] * adc.channel_count
 
 print ("Initializing Sensors")
 imu = navio.mpu9250.MPU9250()
-imu.initialize()
+#imu.initialize()
 rcin = navio.rcinput.RCInput()
 AHRS_data = attitude.AHRS(0.01) #100Hz sensor attitude estimation FIXED 
 ## GPS Disabled
@@ -65,8 +65,7 @@ print ("test")
 if imu.testConnection():
     print ("Connection established: True")
 else:
-	print ("Connection failed")
-    #sys.exit("Connection established: False")
+    sys.exit("Connection established: False")
     
 accels, rates, m9m = imu.getMotion9()
 if m9m[0] == 0:
