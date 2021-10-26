@@ -270,10 +270,6 @@ while True:
 	
 	if (current_time - timer_1hz) >= 1000.0:
 		# Customizable display message #
-
-		led.setColor('Green')
-
-
 		#print "Angles:", "{:+3.2f}".format(roll*57.32), "{:+3.2f}".format(pitch*57.32), "{:+3.2f}".format(yaw*57.32)
 		print(accels[0])
 		#print "Analogs:", analog[0], analog[1], analog[2], analog[3], analog[4]
