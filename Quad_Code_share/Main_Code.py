@@ -406,7 +406,7 @@ while True:
 		elif (baro_timer == 5):
 			baro.calculatePressureAndTemperature()
 			baro_timer = 0
-			print baro.PRES
+			#print baro.PRES
 			if baro.PRES < 1013: # Only update if barometer is valid
 				#alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
 				alts = 0
@@ -548,7 +548,7 @@ while True:
 		
 		#kd = rangeD(float(rc_data[5]),rc5c)
 		#kp = rangeD(float(rc_data[6]),rc6c)
-		print kp, kd
+		#print kp, kd
 		
 		if(not excitation):
 			# NDI control
