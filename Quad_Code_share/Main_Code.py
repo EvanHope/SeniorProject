@@ -583,7 +583,7 @@ while True:
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
 		#if(float(rc_data[4]) > 1920.0):
-		if(true): #temp if statement because rc_data[4] is not being read
+		if(1): #temp if statement because rc_data[4] is not being read
 
 			print "In kill switch"
 			timer = time.time() - timein
