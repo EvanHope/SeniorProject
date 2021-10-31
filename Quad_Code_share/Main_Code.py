@@ -384,7 +384,6 @@ while True:
 	else:
 		led.setColor('Green')
 		
-	print "I got here!"
 	if (current_time - timer_100hz) >=10.0: # 10 ms = 100Hz
 		#### IMU/Attitude and GPS estimation: DO NOT TOUCH ####
 		for i in range (0, adc.channel_count):
