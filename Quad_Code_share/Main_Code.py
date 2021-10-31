@@ -608,18 +608,18 @@ while True:
 				motor_left = throttle + A * frequencySweep
 	
 			else:
-				#motor_right = 1.4 + sinr1 
-				#motor_left = 1.4 + sinr2 
-				#motor_front = 0
-				#motor_back = 0
-				motor_right = throttle - Proll
-				print (motor_right)
-				motor_left = throttle + Proll
-				print (motor_left)
-				motor_front = throttle + Ppitch
-				print (motor_front)
-				motor_back = throttle - Ppitch
-				print (motor_back)
+				motor_right = 1.4 + sinr1 
+				motor_left = 1.4 + sinr2 
+				motor_front = 0
+				motor_back = 0
+				#motor_right = throttle - Proll
+				#print (motor_right)
+				#motor_left = throttle + Proll
+				#print (motor_left)
+				#motor_front = throttle + Ppitch
+				#print (motor_front)
+				#motor_back = throttle - Ppitch
+				#print (motor_back)
 			zeroed = True
 		else:
 			motor_right = 0
