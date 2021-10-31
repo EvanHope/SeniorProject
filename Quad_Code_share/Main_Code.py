@@ -583,6 +583,7 @@ while True:
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
 		if(float(rc_data[4]) > 1920.0):
+			print "In kill switch"
 			timer = time.time() - timein
 			sinr1=0.1*(.37*math.sin(1.5713+2*math.pi*0.2*timer) + .37*math.sin(4.5717+2*0.6*math.pi*timer) + .37*math.sin(1.2140+2*1.0*math.pi*timer) + .37*math.sin(1.0478+2*1.4*math.pi*timer) + .37*math.sin(3.9204+2*math.pi*1.8*timer) + .37*math.sin(4.0099+2*2.2*math.pi*timer) + .37*math.sin(3.4966+2*2.6*math.pi*timer))
 			sinr2=0.1*(.37*math.sin(1.6146+2*math.pi*0.3*timer) + .37*math.sin(4.6867+2*0.7*math.pi*timer) + .37*math.sin(1.2267+2*1.1*math.pi*timer) + .37*math.sin(1.0671+2*1.5*math.pi*timer) + .37*math.sin(3.9664+2*math.pi*1.9*timer) + .37*math.sin(3.8699+2*2.3*math.pi*timer) + .37*math.sin(3.5712+2*2.7*math.pi*timer))
