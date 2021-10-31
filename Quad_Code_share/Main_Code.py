@@ -623,7 +623,7 @@ while True:
 				motor_front = throttle + Ppitch
 				print (motor_front)
 				motor_back = throttle - Ppitch
-				print "back " (motor_back)
+				print (motor_back)
 			zeroed = True
 		else:
 			motor_right = 0
