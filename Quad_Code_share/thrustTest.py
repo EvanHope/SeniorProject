@@ -268,10 +268,10 @@ while True:
 		rc_data = rcin.read_all()
 		
 
-		motor_right = 0
-		motor_left = 0
+		motor_right = 1.5
+		motor_left = 1.5
 		motor_front = 1.5
-		motor_back = 0
+		motor_back = 1.5
 		counter = 0
 		
 		
