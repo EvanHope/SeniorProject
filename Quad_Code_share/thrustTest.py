@@ -236,7 +236,6 @@ while True:
 		led.setColor('Green')
 		
 	if (current_time - timer_100hz) >=10.0: # 10 ms = 100Hz
-		print "In 100Hz loop!"
 		#### IMU/Attitude and GPS estimation: DO NOT TOUCH ####
 		for i in range (0, adc.channel_count):
 			analog[i] = adc.read(i)*0.001
@@ -268,10 +267,10 @@ while True:
 		rc_data = rcin.read_all()
 		
 
-		motor_right = 1.25
-		motor_left = 1.25
-		motor_front = 1.25
-		motor_back = 1.25
+		motor_right = 1.1
+		motor_left = 1.1
+		motor_front = 1.1
+		motor_back = 1.1
 		counter = 0
 		
 		
