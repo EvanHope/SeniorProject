@@ -219,12 +219,12 @@ fh.write(header_string)
 fh.close()
 
 
-print "Initializing ADC"
+print ("Initializing ADC")
 navio.util.check_apm()
 adc = navio.adc.ADC()
 analog = [0] * adc.channel_count
 
-print "Initializing Sensors"
+print ("Initializing Sensors")
 imu = navio.mpu9250.MPU9250()
 imu.initialize()
 rcin = navio.rcinput.RCInput()
@@ -245,21 +245,25 @@ time.sleep(0.01) # Waiting for temperature data ready 10ms
 baro.readTemperature()
 baro.calculatePressureAndTemperature()
 ground_alt = 0
+target_alt = 10 #target alt experimentation.
 if baro.PRES < 1013: # small check in case barometer pressure is invalid
-	#ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
-	ground_alt = 0
+	ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
+	print("altitude ground?:" + ground_alt)
+	target_alt = target_alt + ground_alt
+	print("altitude target?:" + target_alt)
+	#ground_alt = 0
 led.setColor('Red')
 time.sleep(1)
 
 
 if imu.testConnection():
-    print "Connection established: True"
+    print ("Connection established: True")
 else:
     sys.exit("Connection established: False")
     
 accels, rates, m9m = imu.getMotion9()
 if m9m[0] == 0:
-	print "WARNING: Mag reading zeros, try rebooting Navio"
+	print ("WARNING: Mag reading zeros, try rebooting Navio")
 	led.setColor('Magenta')
 
 mag_calibration_flag = False # True means run calibration, 
@@ -376,7 +380,7 @@ accels2 = [0,0,0]
 
 
 
-print "Starting main loop: here we go!"
+print ("Starting main loop: here we go!")
 while True:
 	current_time = (time.time()-timein)*1000.0
 	if m9m[0] == 0:
@@ -385,7 +389,7 @@ while True:
 		led.setColor('Green')
 		
 	if (current_time - timer_100hz) >=10.0: # 10 ms = 100Hz
-		print "In 100Hz loop!"
+		print ("In 100Hz loop!")
 		#### IMU/Attitude and GPS estimation: DO NOT TOUCH ####
 		for i in range (0, adc.channel_count):
 			analog[i] = adc.read(i)*0.001
@@ -408,8 +412,9 @@ while True:
 			baro_timer = 0
 			#print baro.PRES
 			if baro.PRES < 1013: # Only update if barometer is valid
-				#alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
-				alts = 0
+				alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
+				print("altitude?:" + alts)
+				#alts = 0
 				current_alt = alts - ground_alt
 				
 		#buffer = GPS.bus.xfer2([100])
@@ -492,7 +497,12 @@ while True:
 
 		rollDes = rangeD(float(rc_data[0]),rc0c)
 		pitchDes = rangeD(float(rc_data[1]),rc0c)
-		throttle = rangeD(float(rc_data[2]),rc2c)
+		#throttle = rangeD(float(rc_data[2]),rc2c) #uncomment for manual control
+		#altitude control testing
+		if alts < target_alt:
+			throttle = 1.1 #throttle is set to 1.1 for testing
+		else:
+			throttle = 0
 		#yawRateDes = rangeD(float(rc_data[4]),rc4c)
 		
 		if rollDes < 7 and rollDes >-7:
@@ -582,8 +592,7 @@ while True:
 			
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
-		#if(float(rc_data[4]) > 1920.0):
-		if(1): #temp if statement because rc_data[4] is not being read
+		if(float(rc_data[4]) > 1920.0): #what is rc_data[4] on controller?
 			timer = time.time() - timein
 			sinr1=0.1*(.37*math.sin(1.5713+2*math.pi*0.2*timer) + .37*math.sin(4.5717+2*0.6*math.pi*timer) + .37*math.sin(1.2140+2*1.0*math.pi*timer) + .37*math.sin(1.0478+2*1.4*math.pi*timer) + .37*math.sin(3.9204+2*math.pi*1.8*timer) + .37*math.sin(4.0099+2*2.2*math.pi*timer) + .37*math.sin(3.4966+2*2.6*math.pi*timer))
 			sinr2=0.1*(.37*math.sin(1.6146+2*math.pi*0.3*timer) + .37*math.sin(4.6867+2*0.7*math.pi*timer) + .37*math.sin(1.2267+2*1.1*math.pi*timer) + .37*math.sin(1.0671+2*1.5*math.pi*timer) + .37*math.sin(3.9664+2*math.pi*1.9*timer) + .37*math.sin(3.8699+2*2.3*math.pi*timer) + .37*math.sin(3.5712+2*2.7*math.pi*timer))
@@ -615,13 +624,13 @@ while True:
 				#motor_front = 0
 				#motor_back = 0
 				motor_right = throttle - Proll
-				print (motor_right)
+				#print (motor_right)
 				motor_left = throttle + Proll
-				print (motor_left)
+				#print (motor_left)
 				motor_front = throttle + Ppitch
-				print (motor_front)
+				#print (motor_front)
 				motor_back = throttle - Ppitch
-				print (motor_back)
+				#print (motor_back)
 			zeroed = True
 		else:
 			motor_right = 0
