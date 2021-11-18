@@ -498,11 +498,7 @@ while True:
 		rollDes = rangeD(float(rc_data[0]),rc0c)
 		pitchDes = rangeD(float(rc_data[1]),rc0c)
 		#throttle = rangeD(float(rc_data[2]),rc2c) #uncomment for manual control
-		#altitude control testing
-		if alts < target_alt:
-			throttle = 1.1 #throttle is set to 1.1 for testing
-		else:
-			throttle = 0
+		throttle = 1.1 #for testing motors
 		#yawRateDes = rangeD(float(rc_data[4]),rc4c)
 		
 		if rollDes < 7 and rollDes >-7:
@@ -543,6 +539,7 @@ while True:
 		# uncomment for onboard roll/pitch
 		rollError = rollDes - rad2Deg(roll)
 		pitchError = pitchDes - rad2Deg(pitch)
+		altitudeError = target_alt - alts
 		
 
 		
@@ -589,6 +586,14 @@ while True:
 			pitchErrorSum = pitchErrorSum + (pitchError + pitchErrorPrev)*(timeStep/2.0)
 			#print(rollErrorSum)
 			pitchIntegral = ki * deg2Rad(pitchErrorSum)
+
+			altitudePorportional = kp * altitudeError
+
+			altitudeDerivative = kd * altitudeError
+
+			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0)
+
+			altitudeIntegral = ki * altitudeError
 			
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
@@ -606,7 +611,8 @@ while True:
 
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
-			
+			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
+			print("this is Paltitude:" + Paltitude)
 			#print rad2Deg(yawRel)
 			
 			counter = counter + 1
@@ -644,7 +650,7 @@ while True:
 		
 		pitchErrorPrev = pitchError
 		rollErrorPrev = rollError
-		
+		altitudeErrorPrev = altitudeError
 		
 		
 		
