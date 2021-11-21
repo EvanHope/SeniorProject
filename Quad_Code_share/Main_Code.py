@@ -674,15 +674,15 @@ while True:
 		#except NameError:
 		#	GPS_data = None
 		#if GPS_data is not None:
-		fh = open("Log_Files/datalog%s.csv" % gg,"a")
+		#fh = open("Log_Files/datalog%s.csv" % gg,"a")
 		#log_data = np.array([time.clock(), GPS_data.lat/10000000.0, GPS_data.lon/10000000.0,
 		#### 			LOGGING 				####
 		# This is the data to be logged. The header (text at top of file) is edited at the top
 		# of the program. Add/subtract variables as needed.
-		log_data = np.array([time.time()-timein,roll,rates[1],motor_right,motor_left,sinr1,sinr2])
-		np.savetxt(fh, log_data.reshape(1,log_data.shape[0]), delimiter=',', fmt='%.6f')
+		#log_data = np.array([time.time()-timein,roll,rates[1],motor_right,motor_left,sinr1,sinr2])
+		#np.savetxt(fh, log_data.reshape(1,log_data.shape[0]), delimiter=',', fmt='%.6f')
 		
-		fh.close()
+		#fh.close()
 		
 		
 		
