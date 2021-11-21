@@ -379,7 +379,7 @@ accels2 = [0,0,0]
 #	doOver = int(input("THIS WILL ERASE ALL VALS\nto redo, type 1, otherwise type 0, then press enter\n"))
 
 
-
+alts = 0
 print ("Starting main loop: here we go!")
 while True:
 	current_time = (time.time()-timein)*1000.0
