@@ -542,7 +542,8 @@ while True:
 		rollError = rollDes - rad2Deg(roll)
 		pitchError = pitchDes - rad2Deg(pitch)
 		altitudeError = target_alt - alts
-		
+		print("altitude?:" + alts)
+		print("altitude error?:" + altitudeError)
 
 		
 		#print(rc_data)
