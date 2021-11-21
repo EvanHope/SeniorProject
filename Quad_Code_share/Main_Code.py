@@ -413,13 +413,13 @@ while True:
 			baro.calculatePressureAndTemperature()
 			baro_timer = 0
 			print baro.PRES
-			#if baro.PRES < 1013: # Only update if barometer is valid
-			alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
-			print "altitude?:"
-			print alts
-			#alts = 0
-			current_alt = alts - ground_alt
-			print current_alt
+			if baro.PRES < 1013: # Only update if barometer is valid
+				alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
+				print "altitude?:"
+				print alts
+				#alts = 0
+				current_alt = alts - ground_alt
+				print current_alt
 				
 		#buffer = GPS.bus.xfer2([100])
 		## GPS is disabled ##
@@ -543,9 +543,9 @@ while True:
 		# uncomment for onboard roll/pitch
 		rollError = rollDes - rad2Deg(roll)
 		pitchError = pitchDes - rad2Deg(pitch)
-		altitudeError = target_alt - current_alt
-		print(current_alt)
-		print(altitudeError)
+		#altitudeError = target_alt - current_alt
+		#print(current_alt)
+		#print(altitudeError)
 
 		
 		#print(rc_data)
@@ -592,17 +592,18 @@ while True:
 			#print(rollErrorSum)
 			pitchIntegral = ki * deg2Rad(pitchErrorSum)
 
-			altitudePorportional = kp * altitudeError
+			#altitudePorportional = kp * altitudeError
 
-			altitudeDerivative = kd * altitudeError
+			#altitudeDerivative = kd * altitudeError
 
-			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0)
+			#altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0)
 
-			altitudeIntegral = ki * altitudeError
+			#altitudeIntegral = ki * altitudeError
 			
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
-		if(float(rc_data[4]) > 1920.0): #what is rc_data[4] on controller?
+		#if(float(rc_data[4]) > 1920.0): #what is rc_data[4] on controller?
+		if(true):
 			timer = time.time() - timein
 			sinr1=0.1*(.37*math.sin(1.5713+2*math.pi*0.2*timer) + .37*math.sin(4.5717+2*0.6*math.pi*timer) + .37*math.sin(1.2140+2*1.0*math.pi*timer) + .37*math.sin(1.0478+2*1.4*math.pi*timer) + .37*math.sin(3.9204+2*math.pi*1.8*timer) + .37*math.sin(4.0099+2*2.2*math.pi*timer) + .37*math.sin(3.4966+2*2.6*math.pi*timer))
 			sinr2=0.1*(.37*math.sin(1.6146+2*math.pi*0.3*timer) + .37*math.sin(4.6867+2*0.7*math.pi*timer) + .37*math.sin(1.2267+2*1.1*math.pi*timer) + .37*math.sin(1.0671+2*1.5*math.pi*timer) + .37*math.sin(3.9664+2*math.pi*1.9*timer) + .37*math.sin(3.8699+2*2.3*math.pi*timer) + .37*math.sin(3.5712+2*2.7*math.pi*timer))
@@ -616,8 +617,8 @@ while True:
 
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
-			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
-			print("this is Paltitude:" + Paltitude)
+			#Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
+			#print("this is Paltitude:" + Paltitude)
 			#print rad2Deg(yawRel)
 			
 			counter = counter + 1
@@ -655,7 +656,7 @@ while True:
 		
 		pitchErrorPrev = pitchError
 		rollErrorPrev = rollError
-		altitudeErrorPrev = altitudeError
+		#altitudeErrorPrev = altitudeError
 		
 		
 		
