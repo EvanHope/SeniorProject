@@ -65,7 +65,7 @@ rc2out = [.99,1.75]
 #rc5out = [.001,.01]
 #rc6out = [.01,1]
 
-throttle = 1.5
+throttle = 1.1
 
 prollOut = [-.15,.15]
 
