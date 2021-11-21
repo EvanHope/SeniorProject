@@ -413,13 +413,13 @@ while True:
 			baro.calculatePressureAndTemperature()
 			baro_timer = 0
 			print baro.PRES
-			if baro.PRES < 1013: # Only update if barometer is valid
-				alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
-				print "altitude?:"
-				print alts
-				#alts = 0
-				current_alt = alts - ground_alt
-				print current_alt
+			#if baro.PRES < 1013: # Only update if barometer is valid
+			alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
+			print "altitude?:"
+			print alts
+			#alts = 0
+			current_alt = alts - ground_alt
+			print current_alt
 				
 		#buffer = GPS.bus.xfer2([100])
 		## GPS is disabled ##
