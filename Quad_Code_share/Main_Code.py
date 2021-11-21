@@ -209,14 +209,14 @@ current_alt = 0;
 
 
 # Getting next available log file number and creating header#
-#gg = 0
-#while os.path.exists("Log_Files/datalog%s.csv" % gg):
-#	gg+=1
+gg = 0
+while os.path.exists("Log_Files/datalog%s.csv" % gg):
+	gg+=1
 #header_string = "rates, motor right, motoro left\n"
-#header_string = "Time, roll, rollr,motor right,motor left,msn1,msn2\n"
-#fh = open("Log_Files/datalog%s.csv" % gg,"a")
-#fh.write(header_string)
-#fh.close()
+header_string = "Time, roll, rollr,motor right,motor left,msn1,msn2\n"
+fh = open("Log_Files/datalog%s.csv" % gg,"a")
+fh.write(header_string)
+fh.close()
 
 
 print ("Initializing ADC")
@@ -501,8 +501,8 @@ while True:
 
 		rollDes = rangeD(float(rc_data[0]),rc0c)
 		pitchDes = rangeD(float(rc_data[1]),rc0c)
-		#throttle = rangeD(float(rc_data[2]),rc2c) #uncomment for manual control
-		throttle = 1.1 #for testing motors
+		throttle = rangeD(float(rc_data[2]),rc2c) #uncomment for manual control
+		#throttle = 1.1 #for testing motors
 		#yawRateDes = rangeD(float(rc_data[4]),rc4c)
 		
 		if rollDes < 7 and rollDes >-7:
