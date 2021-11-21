@@ -415,9 +415,11 @@ while True:
 			print baro.PRES
 			if baro.PRES < 1013: # Only update if barometer is valid
 				alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
-				print("altitude?:" + alts)
+				print "altitude?:"
+				print alts
 				#alts = 0
 				current_alt = alts - ground_alt
+				print current_alt
 				
 		#buffer = GPS.bus.xfer2([100])
 		## GPS is disabled ##
@@ -541,8 +543,8 @@ while True:
 		# uncomment for onboard roll/pitch
 		rollError = rollDes - rad2Deg(roll)
 		pitchError = pitchDes - rad2Deg(pitch)
-		altitudeError = target_alt - alts
-		print(alts)
+		altitudeError = target_alt - current_alt
+		print(current_alt)
 		print(altitudeError)
 
 		
