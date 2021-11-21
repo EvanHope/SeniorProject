@@ -391,7 +391,7 @@ while True:
 		led.setColor('Green')
 		
 	if (current_time - timer_100hz) >=10.0: # 10 ms = 100Hz
-		print ("In 100Hz loop!")
+		#print ("In 100Hz loop!")
 		#### IMU/Attitude and GPS estimation: DO NOT TOUCH ####
 		for i in range (0, adc.channel_count):
 			analog[i] = adc.read(i)*0.001
@@ -542,8 +542,8 @@ while True:
 		rollError = rollDes - rad2Deg(roll)
 		pitchError = pitchDes - rad2Deg(pitch)
 		altitudeError = target_alt - alts
-		print("altitude?:" + alts)
-		print("altitude error?:" + altitudeError)
+		print(alts)
+		print(altitudeError)
 
 		
 		#print(rc_data)
