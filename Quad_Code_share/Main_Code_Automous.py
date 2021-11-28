@@ -115,9 +115,9 @@ kd = 3.2
 #kd = .000
 
 # no overshoot
-#kp = .04019
-#ki = .107031
-#kd = .010061
+kpz = .04019
+kiz = .107031
+kdz = .010061
 
 # debug message flag
 dbgmsg = True # turn on for specific messages
@@ -594,13 +594,13 @@ while True:
 			#print(rollErrorSum)
 			pitchIntegral = ki * deg2Rad(pitchErrorSum)
 
-			altitudePorportional = kp * altitudeError
+			altitudePorportional = kpz * altitudeError
 
-			altitudeDerivative = kd * altitudeError
+			altitudeDerivative = kdz * altitudeError
 
 			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0)
 
-			altitudeIntegral = ki * altitudeError
+			altitudeIntegral = kiz * altitudeError
 			
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)

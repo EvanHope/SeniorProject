@@ -634,13 +634,13 @@ while True:
 				#motor_front = 0
 				#motor_back = 0
 				motor_right = throttle - Proll
-				print (motor_right)
+				#print (motor_right)
 				motor_left = throttle + Proll
-				print (motor_left)
+				#print (motor_left)
 				motor_front = throttle + Ppitch
-				print (motor_front)
+				#print (motor_front)
 				motor_back = throttle - Ppitch
-				print (motor_back)
+				#print (motor_back)
 			zeroed = True
 		else:
 			motor_right = 0
@@ -765,8 +765,14 @@ while True:
 		# Customizable display message #
 		#print "Angles:", "{:+3.2f}".format(roll*57.32), "{:+3.2f}".format(pitch*57.32), "{:+3.2f}".format(yaw*57.32)
 		
-		
-		
+		print("right:")
+		print (motor_right)
+		print("left:")
+		print (motor_left)
+		print("front")
+		print (motor_front)
+		print("back:")
+		print (motor_back)
 		#print "Analogs:", analog[0], analog[1], analog[2], analog[3], analog[4]
 		#print "Altitude:", current_alt
 		#print pitch_angle_gyro
