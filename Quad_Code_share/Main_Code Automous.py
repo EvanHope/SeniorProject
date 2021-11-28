@@ -245,7 +245,7 @@ time.sleep(0.01) # Waiting for temperature data ready 10ms
 baro.readTemperature()
 baro.calculatePressureAndTemperature()
 ground_alt = 0
-target_alt = 10 #target alt experimentation.
+target_alt = 45 #target alt experimentation.
 if baro.PRES < 1013: # small check in case barometer pressure is invalid
 	ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
 	print("altitude ground?:" + ground_alt)
@@ -413,12 +413,12 @@ while True:
 			baro.calculatePressureAndTemperature()
 			baro_timer = 0
 			#print baro.PRES
-			#if baro.PRES < 1013: # Only update if barometer is valid
-				#alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
+			if baro.PRES < 1013: # Only update if barometer is valid
+				alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
 				#print "altitude?:"
 				#print alts
 				#alts = 0
-				#current_alt = alts - ground_alt
+				current_alt = alts - ground_alt
 				#print current_alt
 				
 		#buffer = GPS.bus.xfer2([100])
@@ -499,14 +499,12 @@ while True:
 		# -------------------------STABILIZATION-----------------------------------------
 		# read desired roll from RC stick
 
-		#uncomment for pitch and roll controller control:
 		#rollDes = rangeD(float(rc_data[0]),rc0c)
 		#pitchDes = rangeD(float(rc_data[1]),rc0c)
-		#set to 0 to ensure drone always tries to stay stable
 		rollDes = 0
 		pitchDes = 0
-		throttle = rangeD(float(rc_data[2]),rc2c) #uncomment for manual control
-		#throttle = 1.1 #for testing motors
+		#throttle = rangeD(float(rc_data[2]),rc2c) #uncomment for manual control
+		throttle = 1.0 #for testing Paltitude
 		#yawRateDes = rangeD(float(rc_data[4]),rc4c)
 		
 		if rollDes < 7 and rollDes >-7:
@@ -545,7 +543,7 @@ while True:
 		# uncomment for onboard roll/pitch
 		rollError = rollDes - rad2Deg(roll)
 		pitchError = pitchDes - rad2Deg(pitch)
-		#altitudeError = target_alt - current_alt
+		altitudeError = target_alt - current_alt
 		#print(current_alt)
 		#print(altitudeError)
 
@@ -594,19 +592,23 @@ while True:
 			#print(rollErrorSum)
 			pitchIntegral = ki * deg2Rad(pitchErrorSum)
 
-			#altitudePorportional = kp * altitudeError
+			altitudePorportional = kp * altitudeError
 
-			#altitudeDerivative = kd * altitudeError
+			altitudeDerivative = kd * altitudeError
 
-			#altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0)
+			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0)
 
-			#altitudeIntegral = ki * altitudeError
+			altitudeIntegral = ki * altitudeError
 			
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
 		#if(float(rc_data[4]) > 1920.0): #what is rc_data[4] on controller?
 		if(1):
 			timer = time.time() - timein
+			#sinr1=0.1*(.37*math.sin(1.5713+2*math.pi*0.2*timer) + .37*math.sin(4.5717+2*0.6*math.pi*timer) + .37*math.sin(1.2140+2*1.0*math.pi*timer) + .37*math.sin(1.0478+2*1.4*math.pi*timer) + .37*math.sin(3.9204+2*math.pi*1.8*timer) + .37*math.sin(4.0099+2*2.2*math.pi*timer) + .37*math.sin(3.4966+2*2.6*math.pi*timer))
+			#sinr2=0.1*(.37*math.sin(1.6146+2*math.pi*0.3*timer) + .37*math.sin(4.6867+2*0.7*math.pi*timer) + .37*math.sin(1.2267+2*1.1*math.pi*timer) + .37*math.sin(1.0671+2*1.5*math.pi*timer) + .37*math.sin(3.9664+2*math.pi*1.9*timer) + .37*math.sin(3.8699+2*2.3*math.pi*timer) + .37*math.sin(3.5712+2*2.7*math.pi*timer))
+			#sinr3=(.37*math.sin(1.9535+2*math.pi*0.4*timer) + .37*math.sin(5.2646+2*0.8*math.pi*timer) + .37*math.sin(2.0651+2*1.2*math.pi*timer) + .37*math.sin(2.4636+2*1.6*math.pi*timer) + .37*math.sin(5.6716+2*math.pi*2.0*timer) + .37*math.sin(5.7265+2*2.4*math.pi*timer) + .37*math.sin(5.7810+2*2.8*math.pi*timer))
+			#sinr4=(.37*math.sin(3.2771+2*math.pi*0.5*timer) + .37*math.sin(1.3417+2*0.9*math.pi*timer) + .37*math.sin(5.5561+2*1.3*math.pi*timer) + .37*math.sin(0.5030+2*1.7*math.pi*timer) + .37*math.sin(4.7331+2*math.pi*2.1*timer) + .37*math.sin(5.9415+2*2.5*math.pi*timer) + .37*math.sin(0.7460+2*2.9*math.pi*timer))
 			if(rollErrorSum > .5):
 				rollErrorSum = 0
 			if(not zeroed):
@@ -615,7 +617,7 @@ while True:
 
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
-			#Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
+			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
 			#print("this is Paltitude:" + Paltitude)
 			#print rad2Deg(yawRel)
 			
@@ -634,12 +636,16 @@ while True:
 				#motor_front = 0
 				#motor_back = 0
 				motor_right = throttle - Proll
+				#motor_right = Paltitude - Proll #might have to add 1.0 for Paltitude??
 				#print (motor_right)
 				motor_left = throttle + Proll
+				#motor_left = Paltitude + Proll
 				#print (motor_left)
 				motor_front = throttle + Ppitch
+				#motor_front = Paltitude + Ppitch
 				#print (motor_front)
 				motor_back = throttle - Ppitch
+				#motor_back = Paltitude - Ppitch #use this for altitude control
 				#print (motor_back)
 			zeroed = True
 		else:
