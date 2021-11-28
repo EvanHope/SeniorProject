@@ -604,8 +604,8 @@ while True:
 			
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
-		#if(float(rc_data[4]) > 1920.0): #what is rc_data[4] on controller?
-		if(1):
+		if(float(rc_data[4]) > 1700.0): #what is rc_data[4] on controller?
+		#if(1):
 			timer = time.time() - timein
 			if(rollErrorSum > .5):
 				rollErrorSum = 0
@@ -634,13 +634,13 @@ while True:
 				#motor_front = 0
 				#motor_back = 0
 				motor_right = throttle - Proll
-				#print (motor_right)
+				print (motor_right)
 				motor_left = throttle + Proll
-				#print (motor_left)
+				print (motor_left)
 				motor_front = throttle + Ppitch
-				#print (motor_front)
+				print (motor_front)
 				motor_back = throttle - Ppitch
-				#print (motor_back)
+				print (motor_back)
 			zeroed = True
 		else:
 			motor_right = 0
