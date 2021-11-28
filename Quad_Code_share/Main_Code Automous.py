@@ -635,16 +635,24 @@ while True:
 				#motor_left = 1.4 + sinr2 
 				#motor_front = 0
 				#motor_back = 0
-				motor_right = throttle - Proll
+
+				#motor_right = throttle - Proll
+				motor_right = 0
 				#motor_right = Paltitude - Proll #might have to add 1.0 for Paltitude??
 				#print (motor_right)
-				motor_left = throttle + Proll
+
+				#motor_left = throttle + Proll
+				motor_left = 0
 				#motor_left = Paltitude + Proll
 				#print (motor_left)
-				motor_front = throttle + Ppitch
+
+				#motor_front = throttle + Ppitch
+				motor_front = 0
 				#motor_front = Paltitude + Ppitch
 				#print (motor_front)
-				motor_back = throttle - Ppitch
+
+				#motor_back = throttle - Ppitch
+				motor_back = 0
 				#motor_back = Paltitude - Ppitch #use this for altitude control
 				#print (motor_back)
 			zeroed = True
@@ -770,7 +778,24 @@ while True:
 	if (current_time - timer_1hz) >= 1000.0:
 		# Customizable display message #
 		#print "Angles:", "{:+3.2f}".format(roll*57.32), "{:+3.2f}".format(pitch*57.32), "{:+3.2f}".format(yaw*57.32)
-		
+		print('current alt:')
+		print(current_alt)
+
+		print('target alt:')
+		print(target_alt)
+
+		print('Ground alt:')
+		print(ground_alt)
+
+		print('rc_data[4] aka kill switch value:')
+		print(float(rc_data[4]))
+
+		print('Paltitude aka what we would replace throttle with if autonomous')
+		print(Paltitude)
+
+
+
+
 		
 		
 		#print "Analogs:", analog[0], analog[1], analog[2], analog[3], analog[4]
