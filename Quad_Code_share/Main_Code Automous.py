@@ -787,6 +787,9 @@ while True:
 		print('Ground alt:')
 		print(ground_alt)
 
+		print('Altitude Error:')
+		print(altitudeError)
+
 		print('rc_data[4] aka kill switch value:')
 		print(float(rc_data[4]))
 
