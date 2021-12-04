@@ -503,9 +503,9 @@ while True:
 		#rollDes = rangeD(float(rc_data[0]),rc0c)
 		#pitchDes = rangeD(float(rc_data[1]),rc0c)
 		#set to 0 to ensure drone always tries to stay stable
-		rollDes = 0
-		pitchDes = 0
-		throttle = rangeD(float(rc_data[2]),rc2c) #uncomment for manual control
+		rollDes = rangeD(float(rc_data[0]),rc0c)
+		pitchDes = rangeD(float(rc_data[1]),rc0c)
+		throttle = rangeD(float(rc_data[2]),rc2c)
 		#throttle = 1.1 #for testing motors
 		#yawRateDes = rangeD(float(rc_data[4]),rc4c)
 		
