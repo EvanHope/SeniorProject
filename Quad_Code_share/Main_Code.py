@@ -764,7 +764,8 @@ while True:
 	if (current_time - timer_1hz) >= 1000.0:
 		# Customizable display message #
 		#print "Angles:", "{:+3.2f}".format(roll*57.32), "{:+3.2f}".format(pitch*57.32), "{:+3.2f}".format(yaw*57.32)
-		
+		print("rc_data[0]:")
+		print(rc_data[0])
 		print("right:")
 		print (motor_right)
 		print("left:")
