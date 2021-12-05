@@ -596,11 +596,11 @@ while True:
 
 			altitudePorportional = kpz * altitudeError
 
-			altitudeDerivative = kdz * altitudeError
+			altitudeDerivative = kdz * altitudeError #this needs to be alitidue velocity I think????
 
-			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0)
+			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0) 
 
-			altitudeIntegral = kiz * altitudeError
+			altitudeIntegral = kiz * altitudeErrorSum
 			
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
