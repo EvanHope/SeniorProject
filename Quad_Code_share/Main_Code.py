@@ -671,13 +671,13 @@ while True:
 				#motor_left = 1.4 + sinr2 
 				#motor_front = 0
 				#motor_back = 0
-				motor_right = throttle - Proll
+				motor_right = Paltitude - Proll
 				#print (motor_right)
-				motor_left = throttle + Proll
+				motor_left = Paltitude + Proll
 				#print (motor_left)
-				motor_front = throttle + Ppitch
+				motor_front = Paltitude + Ppitch
 				#print (motor_front)
-				motor_back = throttle - Ppitch
+				motor_back = Paltitude - Ppitch
 				#print (motor_back)
 			zeroed = True
 			
