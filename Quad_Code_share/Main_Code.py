@@ -507,7 +507,7 @@ while True:
 		pitchDes = rangeD(float(rc_data[1]),rc0c)
 		throttle = rangeD(float(rc_data[2]),rc2c)
 		#throttle = 1.1 #for testing motors
-		#yawRateDes = rangeD(float(rc_data[4]),rc4c)
+		yawRateDes = rangeD(float(rc_data[4]),rc4c)
 		
 		if rollDes < 7 and rollDes >-7:
 			rollDes = 0
@@ -615,7 +615,7 @@ while True:
 
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
-			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
+			#Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
 			#print("this is Paltitude:" + Paltitude)
 			#print rad2Deg(yawRel)
 			
@@ -805,6 +805,10 @@ while True:
 		#print "Angles:", "{:+3.2f}".format(roll*57.32), "{:+3.2f}".format(pitch*57.32), "{:+3.2f}".format(yaw*57.32)
 		print("RC data 4(kill switch data)")
 		print(float(rc_data[4]))
+
+
+		print("Yaw Rate desired:")
+		print(yawRateDes)
 
 		print("right:")
 		print (motor_right)
