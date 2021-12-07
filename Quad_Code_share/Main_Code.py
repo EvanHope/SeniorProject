@@ -642,7 +642,7 @@ while True:
 				motor_back = throttle - Ppitch
 				#print (motor_back)
 			zeroed = True
-		elif(float(rc_data[4]) < 1700.0 & float(rc_data[4]) > 1600): #not sure if this is the correct values
+		elif(float(rc_data[4]) < 1700.0 and float(rc_data[4]) > 1600): #not sure if this is the correct values
 			#altitude control enabled!!! WARNING
 			timer = time.time() - timein
 			if(rollErrorSum > .5):
