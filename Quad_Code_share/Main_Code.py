@@ -507,7 +507,7 @@ while True:
 		pitchDes = rangeD(float(rc_data[1]),rc0c)
 		throttle = rangeD(float(rc_data[2]),rc2c)
 		#throttle = 1.1 #for testing motors
-		yawRateDes = rangeD(float(rc_data[4]),rc4c)
+		yawRateDes = 0
 		
 		if rollDes < 7 and rollDes >-7:
 			rollDes = 0
@@ -809,6 +809,9 @@ while True:
 
 		print("Yaw Rate desired:")
 		print(yawRateDes)
+
+		print("rates[0]:")
+		print(rates[0])
 
 		print("right:")
 		print (motor_right)
