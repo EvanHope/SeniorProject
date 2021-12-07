@@ -114,10 +114,10 @@ kd = .044
 #ki = .0
 #kd = .000
 
-# no overshoot
-#kp = .04019
-#ki = .107031
-#kd = .010061
+# no overshoot ALTITUDE
+kpz = .04019
+kiz = .107031
+kdz = .010061
 
 # debug message flag
 dbgmsg = True # turn on for specific messages
@@ -545,7 +545,7 @@ while True:
 		# uncomment for onboard roll/pitch
 		rollError = rollDes - rad2Deg(roll)
 		pitchError = pitchDes - rad2Deg(pitch)
-		#altitudeError = target_alt - current_alt
+		altitudeError = target_alt - current_alt
 		#print(current_alt)
 		#print(altitudeError)
 
@@ -594,13 +594,13 @@ while True:
 			#print(rollErrorSum)
 			pitchIntegral = ki * deg2Rad(pitchErrorSum)
 
-			#altitudePorportional = kp * altitudeError
+			altitudePorportional = kpz * altitudeError
 
-			#altitudeDerivative = kd * altitudeError
+			altitudeDerivative = kdz * -current_alt #NOT SURE IF THIS IS CORRECT
 
-			#altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0)
+			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0) 
 
-			#altitudeIntegral = ki * altitudeError
+			altitudeIntegral = kiz * altitudeErrorSum
 			
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
@@ -615,7 +615,7 @@ while True:
 
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
-			#Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
+			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
 			#print("this is Paltitude:" + Paltitude)
 			#print rad2Deg(yawRel)
 			
@@ -642,6 +642,45 @@ while True:
 				motor_back = throttle - Ppitch
 				#print (motor_back)
 			zeroed = True
+		elif(float(rc_data[4]) < 1700.0 & float(rc_data[4]) > 1600): #not sure if this is the correct values
+			#altitude control enabled!!! WARNING
+			timer = time.time() - timein
+			if(rollErrorSum > .5):
+				rollErrorSum = 0
+			if(not zeroed):
+				rollErrorSum = 0
+				yawOffset = yaw
+
+			Proll = rollProportional+rollIntegral+rollDerivative
+			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
+			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
+			#print("this is Paltitude:" + Paltitude)
+			#print rad2Deg(yawRel)
+			
+			counter = counter + 1
+			if(excitation):
+				timer=(time.time()-timein)
+				frequencySweep = math.sin(2*math.pi*timer*(.2+.001*n))
+				n=n+1
+				
+				motor_right = throttle - A * frequencySweep
+				motor_left = throttle + A * frequencySweep
+	
+			else:
+				#motor_right = 1.4 + sinr1 
+				#motor_left = 1.4 + sinr2 
+				#motor_front = 0
+				#motor_back = 0
+				motor_right = throttle - Proll
+				#print (motor_right)
+				motor_left = throttle + Proll
+				#print (motor_left)
+				motor_front = throttle + Ppitch
+				#print (motor_front)
+				motor_back = throttle - Ppitch
+				#print (motor_back)
+			zeroed = True
+			
 		else:
 			motor_right = 0
 			motor_left = 0
@@ -764,7 +803,9 @@ while True:
 	if (current_time - timer_1hz) >= 1000.0:
 		# Customizable display message #
 		#print "Angles:", "{:+3.2f}".format(roll*57.32), "{:+3.2f}".format(pitch*57.32), "{:+3.2f}".format(yaw*57.32)
-		
+		print("RC data 4(kill switch data)")
+		print(float(rc_data[4]))
+
 		print("right:")
 		print (motor_right)
 		print("left:")
