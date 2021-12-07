@@ -596,7 +596,7 @@ while True:
 
 			altitudePorportional = kpz * altitudeError
 
-			altitudeDerivative = kdz * altitudeError #this needs to be alitidue velocity I think????
+			altitudeDerivative = kdz * -current_alt #NOT SURE IF THIS IS CORRECT
 
 			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0) 
 
