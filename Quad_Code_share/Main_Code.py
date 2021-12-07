@@ -99,15 +99,15 @@ kd = .011319
 #kd = .0897
 
 # Disnmore Herrington Tuning using this now
-kp = .210
-ki = .015
-kd = .044
+#kp = .210
+#ki = .015
+#kd = .044
 
 
 # Kevin Tuning
-#kp = .295
-#ki = .0015
-#kd = 3.2
+kp = .295
+ki = .0015
+kd = 3.2
 
 # Disnmore Herrington Tuning RollSimp
 #kp = .05
@@ -596,7 +596,7 @@ while True:
 
 			altitudePorportional = kpz * altitudeError
 
-			altitudeDerivative = kdz * -current_alt #NOT SURE IF THIS IS CORRECT
+			altitudeDerivative = kdz * -current_alt #Ncurrent_alt needs to be alt velocity(idk how to get alt velocity)
 
 			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0) 
 
@@ -604,7 +604,7 @@ while True:
 			
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
-		if(float(rc_data[4]) > 1700.0): #what is rc_data[4] on controller?
+		if(float(rc_data[4]) > 1700.0): #rc_data[4] is C and D on controller
 		#if(1):
 			timer = time.time() - timein
 			if(rollErrorSum > .5):
