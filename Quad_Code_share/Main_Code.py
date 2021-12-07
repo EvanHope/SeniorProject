@@ -98,16 +98,16 @@ kd = .011319
 #ki = .00001
 #kd = .0897
 
-# Disnmore Herrington Tuning
+# Disnmore Herrington Tuning using this now
 kp = .210
 ki = .015
 kd = .044
 
 
 # Kevin Tuning
-kp = .295
-ki = .0015
-kd = 3.2
+#kp = .295
+#ki = .0015
+#kd = 3.2
 
 # Disnmore Herrington Tuning RollSimp
 #kp = .05
@@ -604,7 +604,7 @@ while True:
 			
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
-		if(float(rc_data[4]) > 1700.0): #rc_data[4] will be > 17000.0 when two top right switches on the main side of the controller are towards operator
+		if(float(rc_data[4]) > 1700.0): #what is rc_data[4] on controller?
 		#if(1):
 			timer = time.time() - timein
 			if(rollErrorSum > .5):
@@ -764,8 +764,7 @@ while True:
 	if (current_time - timer_1hz) >= 1000.0:
 		# Customizable display message #
 		#print "Angles:", "{:+3.2f}".format(roll*57.32), "{:+3.2f}".format(pitch*57.32), "{:+3.2f}".format(yaw*57.32)
-		print("rc_data[0]:")
-		print(rc_data[0])
+		
 		print("right:")
 		print (motor_right)
 		print("left:")
