@@ -810,8 +810,15 @@ while True:
 		print("Yaw Rate desired:")
 		print(yawRateDes)
 
-		print("rates[0]:")
-		print(rates[0])
+		print("accels[0]:")
+		print(accels[0])
+
+		print("accels[1]:")
+		print(accels[1])
+
+		print("accels[2]:")
+		print(accels[2])
+
 
 		print("right:")
 		print (motor_right)
