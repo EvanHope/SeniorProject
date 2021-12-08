@@ -806,30 +806,31 @@ while True:
 	if (current_time - timer_1hz) >= 1000.0:
 		# Customizable display message #
 		#print "Angles:", "{:+3.2f}".format(roll*57.32), "{:+3.2f}".format(pitch*57.32), "{:+3.2f}".format(yaw*57.32)
-		print("RC data 4(kill switch data)")
-		print(float(rc_data[4]))
+		print("current roll:")
+		print(rad2Deg(roll))
+		print("roll error:")
+		print(rollError)
+
+		print("current pitch:")
+		print(rad2Deg(pitch))
+		print("pitch error:")
+		print(pitchError)
+
+		print("target altitude:")
+		print(target_alt)
+		print("current altitude:")
+		print(current_alt)
+		print("altitude error:")
+		print(altitudeError)
 
 
-		print("Yaw Rate desired:")
-		print(yawRateDes)
-
-		print("accels[0]:")
-		print(accels[0])
-
-		print("accels[1]:")
-		print(accels[1])
-
-		print("accels[2]:")
-		print(accels[2])
-
-
-		print("right:")
+		print("right motor value:")
 		print (motor_right)
-		print("left:")
+		print("left motor value:")
 		print (motor_left)
-		print("front")
+		print("front motor value:")
 		print (motor_front)
-		print("back:")
+		print("back motor value:")
 		print (motor_back)
 		#print "Analogs:", analog[0], analog[1], analog[2], analog[3], analog[4]
 		#print "Altitude:", current_alt
