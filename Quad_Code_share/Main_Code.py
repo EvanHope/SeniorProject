@@ -99,14 +99,17 @@ kd = .011319
 #kd = .0897
 
 # Disnmore Herrington Tuning using this now
-kp = .210
-ki = .015
-kd = .044
+#kp = .210
+#ki = .015
+#kd = .044
 
 
 # Kevin Tuning
-#kp = .295
-#ki = .0015
+kp = .295
+ki = .0015
+kd = 3.2
+#kp = 0.5
+#ki = 0.0015
 #kd = 3.2
 
 # Disnmore Herrington Tuning RollSimp
@@ -507,7 +510,7 @@ while True:
 		pitchDes = rangeD(float(rc_data[1]),rc0c)
 		throttle = rangeD(float(rc_data[2]),rc2c)
 		#throttle = 1.1 #for testing motors
-		#yawRateDes = rangeD(float(rc_data[4]),rc4c)
+		yawRateDes = 0
 		
 		if rollDes < 7 and rollDes >-7:
 			rollDes = 0
@@ -596,7 +599,7 @@ while True:
 
 			altitudePorportional = kpz * altitudeError
 
-			altitudeDerivative = kdz * -current_alt #this needs to be velocity I believe however we need to filter data to get an accurate velocity
+			altitudeDerivative = kdz * -current_alt #Ncurrent_alt needs to be alt velocity(idk how to get alt velocity)
 
 			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0) 
 
@@ -604,7 +607,7 @@ while True:
 			
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
-		if(float(rc_data[4]) > 1700.0): #what is rc_data[4] on controller?
+		if(float(rc_data[4]) > 1700.0): #rc_data[4] is C and D on controller
 		#if(1):
 			timer = time.time() - timein
 			if(rollErrorSum > .5):
@@ -615,7 +618,7 @@ while True:
 
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
-			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
+			#Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
 			#print("this is Paltitude:" + Paltitude)
 			#print rad2Deg(yawRel)
 			
@@ -642,7 +645,7 @@ while True:
 				motor_back = throttle - Ppitch
 				#print (motor_back)
 			zeroed = True
-		elif(float(rc_data[4]) < 1700.0 & float(rc_data[4]) > 1600): #not sure if this is the correct values
+		elif(float(rc_data[4]) < 1700.0 and float(rc_data[4]) > 1600): #not sure if this is the correct values
 			#altitude control enabled!!! WARNING
 			timer = time.time() - timein
 			if(rollErrorSum > .5):
@@ -671,13 +674,13 @@ while True:
 				#motor_left = 1.4 + sinr2 
 				#motor_front = 0
 				#motor_back = 0
-				motor_right = throttle - Proll
+				motor_right = Paltitude - Proll
 				#print (motor_right)
-				motor_left = throttle + Proll
+				motor_left = Paltitude + Proll
 				#print (motor_left)
-				motor_front = throttle + Ppitch
+				motor_front = Paltitude + Ppitch
 				#print (motor_front)
-				motor_back = throttle - Ppitch
+				motor_back = Paltitude - Ppitch
 				#print (motor_back)
 			zeroed = True
 			
@@ -803,16 +806,31 @@ while True:
 	if (current_time - timer_1hz) >= 1000.0:
 		# Customizable display message #
 		#print "Angles:", "{:+3.2f}".format(roll*57.32), "{:+3.2f}".format(pitch*57.32), "{:+3.2f}".format(yaw*57.32)
-		print("RC data 4(kill switch data)")
-		print(float(rc_data[4]))
+		print("current roll:")
+		print(rad2Deg(roll))
+		print("roll error:")
+		print(rollError)
 
-		print("right:")
+		print("current pitch:")
+		print(rad2Deg(pitch))
+		print("pitch error:")
+		print(pitchError)
+
+		print("target altitude:")
+		print(target_alt)
+		print("current altitude:")
+		print(current_alt)
+		print("altitude error:")
+		print(altitudeError)
+
+
+		print("right motor value:")
 		print (motor_right)
-		print("left:")
+		print("left motor value:")
 		print (motor_left)
-		print("front")
+		print("front motor value:")
 		print (motor_front)
-		print("back:")
+		print("back motor value:")
 		print (motor_back)
 		#print "Analogs:", analog[0], analog[1], analog[2], analog[3], analog[4]
 		#print "Altitude:", current_alt
