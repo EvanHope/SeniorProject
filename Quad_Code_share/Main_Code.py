@@ -416,12 +416,13 @@ while True:
 			baro.calculatePressureAndTemperature()
 			baro_timer = 0
 			#print baro.PRES
-			#if baro.PRES < 1013: # Only update if barometer is valid
-				#alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
+			if baro.PRES < 1013: # Only update if barometer is valid
+				alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
 				#print "altitude?:"
 				#print alts
 				#alts = 0
-				#current_alt = alts - ground_alt
+				prev_alt = current_alt
+				current_alt = alts - ground_alt
 				#print current_alt
 				
 		#buffer = GPS.bus.xfer2([100])
@@ -599,7 +600,8 @@ while True:
 
 			altitudePorportional = kpz * altitudeError
 
-			altitudeDerivative = kdz * -current_alt #Ncurrent_alt needs to be alt velocity(idk how to get alt velocity)
+			alt_velocity = abs(prev_alt - current_alt) / timeStep #Calculates alt_velocity WARNING: inaccurate measurement
+			altitudeDerivative = kdz * -alt_velocity #Ncurrent_alt needs to be alt velocity(idk how to get alt velocity)
 
 			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0) 
 
