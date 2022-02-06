@@ -601,7 +601,7 @@ while True:
 			altitudePorportional = kpz * altitudeError
 
 			alt_velocity = abs(prev_alt - current_alt) / timeStep #Calculates alt_velocity WARNING: inaccurate measurement
-			altitudeDerivative = kdz * -alt_velocity #Ncurrent_alt needs to be alt velocity(idk how to get alt velocity)
+			altitudeDerivative = kdz * -alt_velocity #alt_velocity may be inaccurate or wrong testing is needed
 
 			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0) 
 
