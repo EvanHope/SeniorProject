@@ -608,7 +608,7 @@ while True:
 			altitudeIntegral = kiz * altitudeErrorSum
 			
 		# -------------------------Kill Switch------------------------------------
-		# eveyrthing in here only happens when the switch is on (up)
+		# everything in here only happens when the switch is on (up)
 		if(float(rc_data[4]) > 1700.0): #rc_data[4] is C and D on controller
 		#if(1):
 			timer = time.time() - timein
@@ -647,7 +647,7 @@ while True:
 				motor_back = throttle - Ppitch
 				#print (motor_back)
 			zeroed = True
-		elif(float(rc_data[4]) < 1700.0 and float(rc_data[4]) > 1600): #not sure if this is the correct values
+		elif(float(rc_data[4]) < 1700.0 and float(rc_data[4]) > 1600): #if kill switch is in middle(I think)
 			#altitude control enabled!!! WARNING
 			timer = time.time() - timein
 			if(rollErrorSum > .5):
@@ -698,7 +698,7 @@ while True:
 		
 		pitchErrorPrev = pitchError
 		rollErrorPrev = rollError
-		#altitudeErrorPrev = altitudeError
+		altitudeErrorPrev = altitudeError
 		
 		
 		
