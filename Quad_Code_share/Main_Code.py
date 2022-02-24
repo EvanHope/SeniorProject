@@ -504,9 +504,7 @@ while True:
 		# read desired roll from RC stick
 
 		#uncomment for pitch and roll controller control:
-		#rollDes = rangeD(float(rc_data[0]),rc0c)
-		#pitchDes = rangeD(float(rc_data[1]),rc0c)
-		#set to 0 to ensure drone always tries to stay stable
+		#set rollDes and PitchDes to 0 to ensure drone always tries to stay stable
 		rollDes = rangeD(float(rc_data[0]),rc0c)
 		pitchDes = rangeD(float(rc_data[1]),rc0c)
 		throttle = rangeD(float(rc_data[2]),rc2c)
@@ -526,8 +524,8 @@ while True:
 		
 		
 		if(stepInput and counter>500):
-			 #print("this is happening")
-			 rollDes = 0
+			#print("this is happening")
+			rollDes = 0
 		
 		if(stepInput and counter-1000 > 0):
 			rollDes = 0

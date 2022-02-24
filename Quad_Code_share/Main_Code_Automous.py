@@ -522,8 +522,8 @@ while True:
 		
 		
 		if(stepInput and counter>500):
-			 #print("this is happening")
-			 rollDes = 0
+			#print("this is happening")
+			rollDes = 0
 		
 		if(stepInput and counter-1000 > 0):
 			rollDes = 0

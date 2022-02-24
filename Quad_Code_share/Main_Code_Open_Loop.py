@@ -16,17 +16,210 @@ import navio.ms5611
 import os
 import navio.rcinput
 from transforms3d.euler import quat2euler
-#import serial
-import struct
-#port = serial.Serial("/dev/ttyUSB0",baudrate=57600, timeout=3.0)
+import filterShawn
+import bufferShawn
+import numIntegration
+import kalmanFilterPython
+
+# ----------------------------------------------------------------------
+# Nic and Shawn's variables -------------------------------START--------
+# ----------------------------------------------------------------------
+convFact = 180/math.pi
+
+def rad2Deg(rad):
+	return rad*convFact
+def deg2Rad(deg):
+	return deg/convFact
+
+def rangeCoeff(xLims, yLims):
+	coeffRange = [0,0]
+	# calc slope and y intercept
+	coeffRange[0] = float(yLims[1]-yLims[0])/float(xLims[1]-xLims[0])
+	coeffRange[1] = float(yLims[1]-xLims[1]*coeffRange[0])
+	#print(coeffRange)
+	return coeffRange
+
+def rangeD(inputD,rangeCoeff):
+	return inputD*rangeCoeff[0] + rangeCoeff[1]
+
+rc0in = [1065,1962]
+rc1in = [1065,1960]
+rc2in = [1065,1970]
+
+#rc0in = [1068, 1930] # roll, ailerons
+#rc1in = [1067, 1930] # pitch, elevators
+#rc2in = [1073, 1925] # throttle
+#rc3in = [1072, 1922] # yaw, rudder
+#rc4in = [1065, 1933] # 3 pos flight mode switch, C
+#rc5in = [1065, 1933] # extra sliders, can be used for tuning
+#rc6in = [1065, 1933] # extra sliders, can be used for tuning
+#rc7in = [1065, 1933] # 3 position switch, E
+#rc8in = [1065, 1933] # 2 position switch, A
+
+#prollIn = [-1000,1000]
+
+rc0out = [-30,30]
+rc1out = [.250,.500]
+#rc0outI = [.16,1.6]
+rc2out = [.99,1.75]
+#rc5out = [.001,.01]
+#rc6out = [.01,1]
+
+throttle = 1.1
+
+prollOut = [-.15,.15]
+
+rc0c = rangeCoeff(rc0in,rc0out)
+rc1c = rangeCoeff(rc1in,rc1out)
+#rc0cI = rangeCoeff(rc0in,rc0outI)
+rc2c = rangeCoeff(rc2in,rc2out)
+#rc5c = rangeCoeff(rc5in,rc5out)
+#rc6c = rangeCoeff(rc6in,rc6out)
+
+# set this flag to true to run the freq sweep, otherwise disable
+excitation = False
+zeroed = False
+
+# set this flag to run the rc calibration (output all values to record max/min)
+# rcCal = false
+
+# yaw gains
+kpy = 19.39823
+kiy = .387965
+kdy = 7.525825
+
+# ZN tuning
+kp = .12057
+ki = .321092
+kd = .011319
+
+# Disnmore Herrington Tuning
+#kp = .508
+#ki = .00001
+#kd = .0897
+
+# Disnmore Herrington Tuning using this now
+#kp = .210
+#ki = .015
+#kd = .044
+
+
+# Kevin Tuning
+kp = .295
+ki = .0015
+kd = 3.2
+#kp = 0.5
+#ki = 0.0015
+#kd = 3.2
+
+# Disnmore Herrington Tuning RollSimp
+#kp = .05
+#ki = .0
+#kd = .000
+
+# no overshoot ALTITUDE
+kpz = .04019
+kiz = .107031
+kdz = .010061
+
+# debug message flag
+dbgmsg = True # turn on for specific messages
+dbgmsg2 = False # both true to turn on all messages
+
+# filter cutoff frequency and sampling rate
+fc = 6
+fs = 100.0
+order = 2
+
+# run these only once to calculate the coefficients
+coeffGyro = filterShawn.butterworth(order,"HPF",fc,fs)
+coeffAcc = filterShawn.butterworth(order,"LPF",fc,fs)
+
+kalmanObj = kalmanFilterPython.kalmanFilterShawn()
+
+# create input buffers for gyro raw and accel roll data
+gyroRawBuffer = bufferShawn.bufferShawn(order+1)
+accelRollBuffer = bufferShawn.bufferShawn(order+1)
+
+# create output buffers for filtered gyro raw and filtered accel roll data
+gyroFiltBuffer = bufferShawn.bufferShawn(order+2)
+accelFiltBuffer = bufferShawn.bufferShawn(order)
+
+# create roll error buffer
+rollErrorCurr = 0
+rollErrorPrev = 0
+rollErrorSum = 0
+
+pitchErrorPrev = 0
+pitchErrorSum = 0
+
+timeStep = .01 # seconds (at 100 Hz)
+
+# initialize vars for Simpsons rule integration
+evenRoll = 0
+oddRoll = 0
+rollGyroSimp = 0
+sinr1 = 0
+sinr2 = 0
+sinr3 = 0
+sinr4 = 0
+rollKalman = 0
+rollGyro = 0
+rollGyroRaw = 0
+currentGyro = 0
+previousGyro = 0
+rollAccel = 0
+Pyaw = 0
+
+yawStep = False
+yawRel = 0
+yawOffset = 0
+
+stepInput = False
+counter = 0
+
+# set up encoder variables, encoder0 is used to set the starting position to 0 degrees
+rollEnc = 0
+encoder0 = 0
+
+if(excitation):
+	n = 0
+	A = .04
+	wn = 1
+	zeta = 1
+	kp = wn**2
+	kd = 2*zeta*wn
+else:
+	zeta = 1
+	wn = 1
+	#B = 51.3341 # experimentally determined, in radians
+	B = 2941.2 # experimentally determined, in degrees
+	A = -1.5856 # experimental
+	
+	wn = 4.96 # experimental 
+
+	#kp = wn**2.0
+	#kd = 2.0*zeta*wn
+
+# ----------------------------------------------------------------------
+# Nic and Shawn's variables --------------------------------END---------
+# ----------------------------------------------------------------------
+
+
+# current_alt has been zeroed out to prevent the code from wigging out
+current_alt = 0;
+
+
+
 # Getting next available log file number and creating header#
 gg = 0
-while os.path.exists("Log_Files/datalog%s.csv" % gg):
-	gg+=1
-header_string = "Time, Altitude, Yaw, Pitch, Roll, Ax, Ay, Az, Pitch_rate, Roll_rate,Yaw_rate, Magx, Magy, Magz"
-fh = open("Log_Files/datalog%s.csv" % gg,"a")
-fh.write(header_string)
-fh.close()
+#while os.path.exists("Log_Files/datalog%s.csv" % gg):
+#	gg+=1
+#header_string = "rates, motor right, motoro left\n"
+#header_string = "Time, roll, rollr,motor right,motor left,msn1,msn2\n"
+#fh = open("Log_Files/datalog%s.csv" % gg,"a")
+#fh.write(header_string)
+#fh.close()
 
 
 print ("Initializing ADC")
@@ -37,7 +230,6 @@ analog = [0] * adc.channel_count
 print ("Initializing Sensors")
 imu = navio.mpu9250.MPU9250()
 imu.initialize()
-#time.sleep(10)
 rcin = navio.rcinput.RCInput()
 AHRS_data = attitude.AHRS(0.01) #100Hz sensor attitude estimation FIXED 
 ## GPS Disabled
@@ -56,9 +248,13 @@ time.sleep(0.01) # Waiting for temperature data ready 10ms
 baro.readTemperature()
 baro.calculatePressureAndTemperature()
 ground_alt = 0
-'''if baro.PRES < 1013: # small check in case barometer pressure is invalid
-	ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)'''
-
+target_alt = 10 #target alt experimentation.
+if baro.PRES < 1013: # small check in case barometer pressure is invalid
+	ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
+	#print("altitude ground?:" + ground_alt)
+	target_alt = target_alt + ground_alt
+	#print("altitude target?:" + target_alt)
+	#ground_alt = 0
 led.setColor('Red')
 time.sleep(1)
 
@@ -121,14 +317,12 @@ time.sleep(0.5)
 
 # Timers to maintain constant cycle times 
 timein = time.time()
-timeg = time.time() - timein
-prev_time = timeg*1000.0
+prev_time = (time.time()-timein)*1000.0
 timer_1hz = prev_time
 timer_10hz = prev_time
 timer_25hz = prev_time
 timer_50hz = prev_time
 timer_100hz = prev_time
-timer_1000hz = prev_time
 baro_timer = 0
 # Declaring variables for use in main loop
 rc_data = rcin.read_all()
@@ -145,42 +339,74 @@ gyro_2p = 0
 gyro_1p = 0
 gyro_0p = 0
 pitch_angle_gyro = 0
-ac_AHRS = [0,0,0]
-gy_AHRS = [0,0,0]
-mag_AHRS = [0,0,0]
-xpos = 0;ypos = 0;zpos = 0
-wn = 4; damp = 1;kd = 2*damp*wn; kp = wn*wn; # controller gains
-c = -0.15;b = 0.15 # motor constants
-yawd = 0; coryaw = 0;yawddprev = 0;angleyaw = 0;n = 0;yaw1cmd = 0;yaw2cmd = 0;yaw3cmd = 0;yaw4cmd = 0
-
-
+rates2= [0, 0, 0]
+accels2 = [0,0,0]
 #------------------------------------------------#
 ###       Declare global variables here        ###
 
+# ----------------------------perform RC calibration------------------------------
+#doOver = True
+#rcCal = int(input("RC Calibration, 1 or 0\n"))
+#if(rcCal):
+#	while(doOver):
+#		doOver = False
+#		print("Calibrate RC Inputs")
+#		print("Minimum Values")
+#		print("rc_data[0]",rc_data[0],"rc_data[1]",rc_data[1],"rc_data[2]",rc_data[2],"rc_data[3]",rc_data[3],"rc_data[4]",rc_data[4])
+#		rc0[0] = rc_data[0]
+#		rc1[0] = rc_data[1]
+#		rc2[0] = rc_data[2]
+#		rc3[0] = rc_data[3]
+#		rc4[0] = rc_data[4]
+#		print("put all sticks in max position")
+#		dummy = int(input("press enter\n"))
+#		print("Maximum Values")
+#		print("rc_data[0]",rc_data[0],"rc_data[1]",rc_data[1],"rc_data[2]",rc_data[2],"rc_data[3]",rc_data[3],"rc_data[4]",rc_data[4])
+#		rc0[1] = rc_data[0]
+#		rc1[1] = rc_data[1]
+#		rc2[1] = rc_data[2]
+#		rc3[1] = rc_data[3]
+#		rc4[1] = rc_data[4]
+#		# these are the output limits for the RC inputs
+#		rc0out = [-90,90]	
+#		rc1out = [0,1]	
+#		rc2out = [1,10]	
+#		rc3out = [0,1]	
+#		rc4out = [0,1]
+#		# these are the coefficients for the RC input ranges
+#		rc0c = rangeCoeff(rc0,rc0out)
+#		rc1c = rangeCoeff(rc1,rc1out)
+#		rc2c = rangeCoeff(rc2,rc2out)
+#		rc3c = rangeCoeff(rc3,rc3out)
+#		rc4c = rangeCoeff(rc4,rc4out)
+#	doOver = int(input("THIS WILL ERASE ALL VALS\nto redo, type 1, otherwise type 0, then press enter\n"))
+
+
+alts = 0
+altitudeErrorSum = 0
+altitudeErrorPrev = 0
 print ("Starting main loop: here we go!")
 while True:
-	current_time = (time.time() - timein)*1000.0
-	#print (time.time())
+	current_time = (time.time()-timein)*1000.0
 	if m9m[0] == 0:
 		led.setColor('Magenta')
 	else:
 		led.setColor('Green')
 		
-		
-	if (current_time - timer_1000hz) >=1.0: # 1 ms = 1000Hz
+	if (current_time - timer_100hz) >=10.0: # 10 ms = 100Hz
+		#print ("In 100Hz loop!")
 		#### IMU/Attitude and GPS estimation: DO NOT TOUCH ####
 		for i in range (0, adc.channel_count):
 			analog[i] = adc.read(i)*0.001
 		accels, rates, m9m = imu.getMotion9()
-		ac_AHRS[0] = -accels[1]
-		ac_AHRS[1] = -accels[0]
-		ac_AHRS[2] = accels[2]
-		gy_AHRS[0] = rates[1]
-		gy_AHRS[1] = rates[0]
-		gy_AHRS[2] = -rates[2]
-		AHRS_data.update_imu(gy_AHRS, ac_AHRS)
-		#yaw,pitch,roll = quat2euler(AHRS_data.quaternion,axes='rzxy')
-		yaw,roll,pitch = quat2euler(AHRS_data.quaternion,axes='rzxy')
+		accels2[0] = -accels[1]
+		accels2[1] = -accels[0]
+		accels2[2] = accels[2]
+		rates2[0] = rates[1]
+		rates2[1] = rates[0]
+		rates2[2] = -rates[2]
+		AHRS_data.update_imu(rates2, accels2)
+		roll,pitch,yaw = quat2euler(AHRS_data.quaternion,axes='rzxy')
 		baro_timer = baro_timer + 1
 		if (baro_timer == 1): baro.refreshPressure()
 		elif (baro_timer == 2): baro.readPressure()
@@ -191,10 +417,14 @@ while True:
 			baro_timer = 0
 			#print baro.PRES
 			if baro.PRES < 1013: # Only update if barometer is valid
-				#alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
-				alts = 0
+				alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
+				#print "altitude?:"
+				#print alts
+				#alts = 0
+				prev_alt = current_alt
 				current_alt = alts - ground_alt
-		
+				#print current_alt
+				
 		#buffer = GPS.bus.xfer2([100])
 		## GPS is disabled ##
 		#for byt in buffer:
@@ -203,7 +433,6 @@ while True:
 		#		GPS_data = GPS.parse_ubx()
 		#### End DO NOT TOUCH ####
 		
-		#----------------------------------------------------#
 		#----------------------------------------------------#
 		#### 			BEGIN STUDENT SECTION			 ####
 		# This section runs at 100Hz. You can add things for executation
@@ -297,8 +526,8 @@ while True:
 		
 		
 		if(stepInput and counter>500):
-			 #print("this is happening")
-			 rollDes = 0
+			#print("this is happening")
+			rollDes = 0
 		
 		if(stepInput and counter-1000 > 0):
 			rollDes = 0
