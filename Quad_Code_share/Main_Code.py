@@ -341,6 +341,7 @@ gyro_0p = 0
 pitch_angle_gyro = 0
 rates2= [0, 0, 0]
 accels2 = [0,0,0]
+prev_alt = 0
 #------------------------------------------------#
 ###       Declare global variables here        ###
 
