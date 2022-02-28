@@ -210,7 +210,7 @@ else:
 
 
 # current_alt has been zeroed out to prevent the code from wigging out
-current_alt = 0;
+current_alt = 0
 
 
 
