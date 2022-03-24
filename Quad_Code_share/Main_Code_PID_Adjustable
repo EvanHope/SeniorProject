@@ -21,6 +21,8 @@ import bufferShawn
 import numIntegration
 import kalmanFilterPython
 
+
+#Note we must find which rc input is rcdata 5 and 6
 # ----------------------------------------------------------------------
 # Nic and Shawn's variables -------------------------------START--------
 # ----------------------------------------------------------------------
@@ -51,8 +53,8 @@ rc2in = [1065,1970]
 #rc2in = [1073, 1925] # throttle
 #rc3in = [1072, 1922] # yaw, rudder
 #rc4in = [1065, 1933] # 3 pos flight mode switch, C
-#rc5in = [1065, 1933] # extra sliders, can be used for tuning
-#rc6in = [1065, 1933] # extra sliders, can be used for tuning
+rc5in = [1065, 1933] # extra sliders, can be used for tuning
+rc6in = [1065, 1933] # extra sliders, can be used for tuning
 #rc7in = [1065, 1933] # 3 position switch, E
 #rc8in = [1065, 1933] # 2 position switch, A
 
@@ -62,8 +64,8 @@ rc0out = [-30,30]
 rc1out = [.250,.500]
 #rc0outI = [.16,1.6]
 rc2out = [.99,1.75]
-#rc5out = [.001,.01]
-#rc6out = [.01,1]
+rc5out = [.001,.01]
+rc6out = [.01,1]
 
 throttle = 1.1
 
@@ -73,8 +75,8 @@ rc0c = rangeCoeff(rc0in,rc0out)
 rc1c = rangeCoeff(rc1in,rc1out)
 #rc0cI = rangeCoeff(rc0in,rc0outI)
 rc2c = rangeCoeff(rc2in,rc2out)
-#rc5c = rangeCoeff(rc5in,rc5out)
-#rc6c = rangeCoeff(rc6in,rc6out)
+rc5c = rangeCoeff(rc5in,rc5out)
+rc6c = rangeCoeff(rc6in,rc6out)
 
 # set this flag to true to run the freq sweep, otherwise disable
 excitation = False
@@ -92,35 +94,6 @@ kdy = 7.525825
 kp = .295
 ki = .0015
 kd = 3.2
-
-# ZN tuning
-#kp = .12057
-#ki = .321092
-#kd = .011319
-
-# Disnmore Herrington Tuning
-#kp = .508
-#ki = .00001
-#kd = .0897
-
-# Disnmore Herrington Tuning using this now
-#kp = .210
-#ki = .015
-#kd = .044
-
-
-# Kevin Tuning
-#kp = .295
-#ki = .0015
-#kd = 3.2
-#kp = 0.5
-#ki = 0.0015
-#kd = 3.2
-
-# Disnmore Herrington Tuning RollSimp
-#kp = .05
-#ki = .0
-#kd = .000
 
 # no overshoot ALTITUDE
 kpz = .04019
@@ -510,9 +483,12 @@ while True:
 
 
 		#PID changing
-		kp = float(rc_data[3]),rc0c #note: must check which rc_data is best suited for these changes
-		ki = float(rc_data[4]),rc0c
-		kd = float(rc_data[5]),rc0c
+		#kp = float(rc_data[3]),rc0c #note: must check which rc_data is best suited for these changes
+		#ki = float(rc_data[4]),rc0c
+		#kd = float(rc_data[5]),rc0c
+		kd = rangeD(float(rc_data[5]),rc5c)
+		kp = rangeD(float(rc_data[6]),rc6c)
+		print (kp, kd)
 		#uncomment for pitch and roll controller control:
 		#set rollDes and PitchDes to 0 to ensure drone always tries to stay stable
 		rollDes = rangeD(float(rc_data[0]),rc0c)
