@@ -77,7 +77,6 @@ rc2c = rangeCoeff(rc2in,rc2out)
 #rc6c = rangeCoeff(rc6in,rc6out)
 
 # set this flag to true to run the freq sweep, otherwise disable
-excitation = False
 zeroed = False
 
 # set this flag to run the rc calibration (output all values to record max/min)
@@ -88,62 +87,19 @@ kpy = 19.39823
 kiy = .387965
 kdy = 7.525825
 
-# ZN tuning
-kp = .12057
-ki = .321092
-kd = .011319
-
-# Disnmore Herrington Tuning
-#kp = .508
-#ki = .00001
-#kd = .0897
-
-# Disnmore Herrington Tuning using this now
-#kp = .210
-#ki = .015
-#kd = .044
-
-
 # Kevin Tuning
 kp = .295
 ki = .0015
 kd = 3.2
-#kp = 0.5
-#ki = 0.0015
-#kd = 3.2
-
-# Disnmore Herrington Tuning RollSimp
-#kp = .05
-#ki = .0
-#kd = .000
 
 # no overshoot ALTITUDE
 kpz = .04019
 kiz = .107031
 kdz = .010061
 
-# debug message flag
-dbgmsg = True # turn on for specific messages
-dbgmsg2 = False # both true to turn on all messages
 
-# filter cutoff frequency and sampling rate
-fc = 6
-fs = 100.0
-order = 2
 
-# run these only once to calculate the coefficients
-coeffGyro = filterShawn.butterworth(order,"HPF",fc,fs)
-coeffAcc = filterShawn.butterworth(order,"LPF",fc,fs)
 
-kalmanObj = kalmanFilterPython.kalmanFilterShawn()
-
-# create input buffers for gyro raw and accel roll data
-gyroRawBuffer = bufferShawn.bufferShawn(order+1)
-accelRollBuffer = bufferShawn.bufferShawn(order+1)
-
-# create output buffers for filtered gyro raw and filtered accel roll data
-gyroFiltBuffer = bufferShawn.bufferShawn(order+2)
-accelFiltBuffer = bufferShawn.bufferShawn(order)
 
 # create roll error buffer
 rollErrorCurr = 0
@@ -182,24 +138,18 @@ counter = 0
 rollEnc = 0
 encoder0 = 0
 
-if(excitation):
-	n = 0
-	A = .04
-	wn = 1
-	zeta = 1
-	kp = wn**2
-	kd = 2*zeta*wn
-else:
-	zeta = 1
-	wn = 1
-	#B = 51.3341 # experimentally determined, in radians
-	B = 2941.2 # experimentally determined, in degrees
-	A = -1.5856 # experimental
-	
-	wn = 4.96 # experimental 
 
-	#kp = wn**2.0
-	#kd = 2.0*zeta*wn
+#I dont think we use these variables
+zeta = 1
+wn = 1
+#B = 51.3341 # experimentally determined, in radians
+B = 2941.2 # experimentally determined, in degrees
+A = -1.5856 # experimental
+
+wn = 4.96 # experimental 
+
+#kp = wn**2.0
+#kd = 2.0*zeta*wn
 
 # ----------------------------------------------------------------------
 # Nic and Shawn's variables --------------------------------END---------
@@ -251,10 +201,8 @@ ground_alt = 0
 target_alt = 10 #target alt experimentation.
 if baro.PRES < 1013: # small check in case barometer pressure is invalid
 	ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
-	#print("altitude ground?:" + ground_alt)
+	print("altitude ground?:" + ground_alt)
 	target_alt = target_alt + ground_alt
-	#print("altitude target?:" + target_alt)
-	#ground_alt = 0
 led.setColor('Red')
 time.sleep(1)
 
@@ -418,12 +366,11 @@ while True:
 			#print baro.PRES
 			if baro.PRES < 1013: # Only update if barometer is valid
 				alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
-				#print "altitude?:"
-				#print alts
+				print ("altitude?:", alts)
 				#alts = 0
 				prev_alt = current_alt
 				current_alt = alts - ground_alt
-				#print current_alt
+				print("current alt: ", current_alt)
 				
 		#buffer = GPS.bus.xfer2([100])
 		## GPS is disabled ##
@@ -455,61 +402,19 @@ while True:
 		#		current_alt contains the current altitude (relatively to 
 		#		start up) in meters (from the barometer)
 		
-		# -------------------------ENCODER ROLL-----------------------------------------
-		# if encoder0 == 0:
-			# encoder0 = analog[4]		
-		# rollEnc = (analog[4]-encoder0)*(360/5)
-		# rollEnc = analog[4]*(360.0/5.0)
-		# -------------------------ENCODER ROLL-----------------------------------------
-		
 		rc_data = rcin.read_all()
-		
-		# -------------------------ATTITUDE EST-----------------------------------------
-		# put current gyro raw data on the head of the gyro input buffer
-		#gyroRawBuffer.put(rates[1])
-		#print(gyroRawBuffer.prev(0),rates[1])
-		
-		#rollKalman = kalmanObj.kalmanFilt(rad2Deg(-math.atan2(accels[0], accels[2])),rad2Deg(rates[1]),timeStep)
-		
-		# put the roll accelerometer angle on the head of the accel roll input buffer
-		#accelRollBuffer.put(-math.atan2(accels[0], accels[2]))
-		
-		# filter gyro data		
-		#gyroFiltBuffer.put(filterShawn.filterEval(coeffGyro,order,gyroRawBuffer,gyroFiltBuffer))
-		
-		# apply trapezoid rule to the filtered gyro data
-		#rollGyro = rollGyro + numIntegration.numIntegration("Trap",timeStep,gyroFiltBuffer)
-		
-		# apply trapezoid rule to the filtered gyro data
-		#rollGyroRaw = rollGyroRaw + numIntegration.numIntegration("Trap",timeStep,gyroRawBuffer)
-		
-		# apply simpson's rule to the filtered gyro data
-		#if((-1.0)**i >=0):
-		#	evenRoll = evenRoll + numIntegration.numIntegration("Simp",timeStep,gyroFiltBuffer)
-		#	rollGyroSimp = evenRoll
-		#else:
-		#	oddRoll = oddRoll + numIntegration.numIntegration("Simp",timeStep,gyroFiltBuffer)
-		#	rollGyroSimp = oddRoll
-	
-		# filter acc data using coefficients found earlier
-		#accelFiltBuffer.put(filterShawn.filterEval(coeffAcc,order,accelRollBuffer,accelFiltBuffer))
-		#rollAccel = accelFiltBuffer.prev(0)
-		
-		# -------------------------ATTITUDE EST-----------------------------------------
-		
-		
-		
-		
-		# -------------------------STABILIZATION-----------------------------------------
-		# read desired roll from RC stick
 
-		#uncomment for pitch and roll controller control:
+		# -------------------------OPEN LOOP---------------------------------------------
+		#xDes = GPS location converted?
+		#yDes = GPS location converted?
+		#rollDes = eq
+		#pitchDes = eq
+		#throttle = eq
+		# -------------------------STABILIZATION-----------------------------------------
+		#uncomment for rc controller
 		#rollDes = rangeD(float(rc_data[0]),rc0c)
 		#pitchDes = rangeD(float(rc_data[1]),rc0c)
-		#set to 0 to ensure drone always tries to stay stable
-		rollDes = rangeD(float(rc_data[0]),rc0c)
-		pitchDes = rangeD(float(rc_data[1]),rc0c)
-		throttle = rangeD(float(rc_data[2]),rc2c)
+		#throttle = rangeD(float(rc_data[2]),rc2c)
 		#throttle = 1.1 #for testing motors
 		yawRateDes = 0
 		
@@ -550,8 +455,6 @@ while True:
 		rollError = rollDes - rad2Deg(roll)
 		pitchError = pitchDes - rad2Deg(pitch)
 		altitudeError = target_alt - current_alt
-		#print(current_alt)
-		#print(altitudeError)
 
 		
 		#print(rc_data)
@@ -568,47 +471,36 @@ while True:
 		#kp = rangeD(float(rc_data[6]),rc6c)
 		#print kp, kd
 		
-		if(not excitation):
-			# NDI control
-			#Proll = (kd*rad2Deg(float(-rates[1])))/(B*1.8)+(kp*(rollError))/B-(A*rad2Deg(float(rates[1])))/(B*1.4)
-			
-			
-			#yawProportional = kpy * rates[2]
-			#derivative = kd * deg2Rad((rollError - rollErrorPrev)/timeStep)
-			#yawDerivative = kdy * -rates[2]
-			#print(deg2Rad((rollError - rollErrorPrev)/timeStep))
-			#yawErrorSum = yawErrorSum + (yawError + yawErrorPrev)*(timeStep/2.0)
-			#print(rollErrorSum)
-			#yawIntegral = ki * deg2Rad(yawErrorSum)
-			
-			
-			rollProportional = kp * deg2Rad(rollError)
-			#derivative = kd * deg2Rad((rollError - rollErrorPrev)/timeStep)
-			rollDerivative = kd * -deg2Rad(rates[1])
-			#print(deg2Rad((rollError - rollErrorPrev)/timeStep))
-			rollErrorSum = rollErrorSum + (rollError + rollErrorPrev)*(timeStep/2.0)
-			#print(rollErrorSum)
-			rollIntegral = ki * deg2Rad(rollErrorSum)
-			
-			pitchProportional = kp * deg2Rad(pitchError)
-			#derivative = kd * deg2Rad((rollError - rollErrorPrev)/timeStep)
-			pitchDerivative = kd * -deg2Rad(rates[0])
-			#print(deg2Rad((rollError - rollErrorPrev)/timeStep))
-			pitchErrorSum = pitchErrorSum + (pitchError + pitchErrorPrev)*(timeStep/2.0)
-			#print(rollErrorSum)
-			pitchIntegral = ki * deg2Rad(pitchErrorSum)
+		#-------------------PID CALCULATIONS-------------------
 
-			altitudePorportional = kpz * altitudeError
+		#yawProportional = kpy * rates[2]
+		#derivative = kd * deg2Rad((rollError - rollErrorPrev)/timeStep)
+		#yawDerivative = kdy * -rates[2]
+		#print(deg2Rad((rollError - rollErrorPrev)/timeStep))
+		#yawErrorSum = yawErrorSum + (yawError + yawErrorPrev)*(timeStep/2.0)
+		#print(rollErrorSum)
+		#yawIntegral = ki * deg2Rad(yawErrorSum)
+		
+		
+		rollProportional = kp * deg2Rad(rollError)
+		rollDerivative = kd * -deg2Rad(rates[1])
+		rollErrorSum = rollErrorSum + (rollError + rollErrorPrev)*(timeStep/2.0)
+		rollIntegral = ki * deg2Rad(rollErrorSum)
+		
+		pitchProportional = kp * deg2Rad(pitchError)
+		pitchDerivative = kd * -deg2Rad(rates[0])
+		pitchErrorSum = pitchErrorSum + (pitchError + pitchErrorPrev)*(timeStep/2.0)
+		pitchIntegral = ki * deg2Rad(pitchErrorSum)
 
-			alt_velocity = abs(prev_alt - current_alt) / timeStep #Calculates alt_velocity WARNING: inaccurate measurement
-			altitudeDerivative = kdz * -alt_velocity #alt_velocity may be inaccurate or wrong testing is needed
-
-			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0) 
-
-			altitudeIntegral = kiz * altitudeErrorSum
+		altitudePorportional = kpz * altitudeError
+		alt_velocity = abs(prev_alt - current_alt) / timeStep #Calculates alt_velocity WARNING: inaccurate measurement
+		#Maybe a solution for getting alt_veltocity is to take the average alt_velocity over x amount of loops
+		altitudeDerivative = kdz * -alt_velocity #alt_velocity may be inaccurate or wrong testing is needed
+		altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0) 
+		altitudeIntegral = kiz * altitudeErrorSum
 			
 		# -------------------------Kill Switch------------------------------------
-		# everything in here only happens when the switch is on (up)
+		# everything in here only happens when the switch is on (up) manual control
 		if(float(rc_data[4]) > 1700.0): #rc_data[4] is C and D on controller
 		#if(1):
 			timer = time.time() - timein
@@ -625,29 +517,14 @@ while True:
 			#print rad2Deg(yawRel)
 			
 			counter = counter + 1
-			if(excitation):
-				timer=(time.time()-timein)
-				frequencySweep = math.sin(2*math.pi*timer*(.2+.001*n))
-				n=n+1
-				
-				motor_right = throttle - A * frequencySweep
-				motor_left = throttle + A * frequencySweep
 	
-			else:
-				#motor_right = 1.4 + sinr1 
-				#motor_left = 1.4 + sinr2 
-				#motor_front = 0
-				#motor_back = 0
-				motor_right = throttle - Proll
-				#print (motor_right)
-				motor_left = throttle + Proll
-				#print (motor_left)
-				motor_front = throttle + Ppitch
-				#print (motor_front)
-				motor_back = throttle - Ppitch
-				#print (motor_back)
+			motor_right = throttle - Proll
+			motor_left = throttle + Proll
+			motor_front = throttle + Ppitch
+			motor_back = throttle - Ppitch
+
 			zeroed = True
-		elif(float(rc_data[4]) < 1700.0 and float(rc_data[4]) > 1600): #if kill switch is in middle(I think)
+		elif(float(rc_data[4]) < 1700.0 and float(rc_data[4]) > 1600): #if kill switch is in middle(I think) autonomous altitude
 			#altitude control enabled!!! WARNING
 			timer = time.time() - timein
 			if(rollErrorSum > .5):
@@ -659,31 +536,16 @@ while True:
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
 			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
-			#print("this is Paltitude:" + Paltitude)
 			#print rad2Deg(yawRel)
 			
 			counter = counter + 1
-			if(excitation):
-				timer=(time.time()-timein)
-				frequencySweep = math.sin(2*math.pi*timer*(.2+.001*n))
-				n=n+1
-				
-				motor_right = throttle - A * frequencySweep
-				motor_left = throttle + A * frequencySweep
-	
-			else:
-				#motor_right = 1.4 + sinr1 
-				#motor_left = 1.4 + sinr2 
-				#motor_front = 0
-				#motor_back = 0
-				motor_right = Paltitude - Proll
-				#print (motor_right)
-				motor_left = Paltitude + Proll
-				#print (motor_left)
-				motor_front = Paltitude + Ppitch
-				#print (motor_front)
-				motor_back = Paltitude - Ppitch
-				#print (motor_back)
+			#Set motor values
+			motor_right = Paltitude - Proll
+			motor_left = Paltitude + Proll
+			motor_front = Paltitude + Ppitch
+			motor_back = Paltitude - Ppitch
+
+
 			zeroed = True
 			
 		else:
@@ -701,12 +563,8 @@ while True:
 		altitudeErrorPrev = altitudeError
 		
 		
-		
-		
 		# LOG DATA
-		
 		# RC Controller INPUT #
-
 				
 		#print (x[4]*(180/math.pi),rollGyro*180/math.pi,x1[4]*(180/math.pi),rollAccel*180/math.pi)
 				
@@ -760,11 +618,7 @@ while True:
 		
 	if (current_time - timer_10hz) >= 100.0:
 #		# RC Controller INPUT #
-#		rc_data = rcin.read_all()
-#		
-		#if(dbgmsg and dbgmsg2):
-		#	print("Gyro Filter Buffer Contents")
-		#	print(gyroFiltBuffer)
+#		rc_data = rcin.read_all()	
 		
 		#print(rad2Deg(rollAccel+rollGyroSimp))
 		#print(rad2Deg(accelRollBuffer.prev(0)),rad2Deg(accelFiltBuffer.prev(0)))
@@ -782,7 +636,7 @@ while True:
 #		
 #		#print (x[4]*(180/math.pi),rollGyro*180/math.pi,x1[4]*(180/math.pi),rollAccel*180/math.pi)
 #		
-#		### Data logging feature ###
+#		### Data logging feature ### 
 #		# GPS is disabled, tab in fh and below to re-enable
 #		#try:
 #		#	GPS_data
@@ -808,41 +662,31 @@ while True:
 	if (current_time - timer_1hz) >= 1000.0:
 		# Customizable display message #
 		#print "Angles:", "{:+3.2f}".format(roll*57.32), "{:+3.2f}".format(pitch*57.32), "{:+3.2f}".format(yaw*57.32)
-		print("current roll:")
-		print(rad2Deg(roll))
-		print("roll error:")
-		print(rollError)
+		print("current roll: ", rad2Deg(roll))
+		print("roll error: ", rollError)
 
-		print("current pitch:")
-		print(rad2Deg(pitch))
-		print("pitch error:")
-		print(pitchError)
+		print("current pitch: ", rad2Deg(pitch))
+		print("pitch error: ", pitchError)
 
-		print("target altitude:")
-		print(target_alt)
-		print("current altitude:")
-		print(current_alt)
-		print("altitude error:")
-		print(altitudeError)
+		print("target altitude: ", target_alt)
+		print("current altitude: ", current_alt)
+		print("altitude error: ", altitudeError)
+		print("Paltitude (aka throttle): ", Paltitude)
 
+		print("right motor value: ", motor_right)
+		print("left motor value: ", motor_left)
+		print("front motor value: ", motor_front)
+		print("back motor value: ", motor_back)
 
-		print("right motor value:")
-		print (motor_right)
-		print("left motor value:")
-		print (motor_left)
-		print("front motor value:")
-		print (motor_front)
-		print("back motor value:")
-		print (motor_back)
 		#print "Analogs:", analog[0], analog[1], analog[2], analog[3], analog[4]
-		#print "Altitude:", current_alt
 		#print pitch_angle_gyro
 		#print roll_angle_acc
 		#print roll_angle_gyro
 		
+		#GPS Data Printing (I do not understand)
 		#if GPS_data is not None:
-		#	print "Location:", "{:+3.6f}".format(GPS_data.lat/10000000.0), "{:+3.6f}".format(GPS_data.lon/10000000.0), "{:+4.1f}".format(GPS_data.heightSea/1000.0)
-		#	print "Loc Accuracy:", "{:+3.3f}".format(GPS_data.horAcc/1000.0), "{:+3.3f}".format(GPS_data.verAcc/1000.0)
+		#	print ("Location:", "{:+3.6f}".format(GPS_data.lat/10000000.0), "{:+3.6f}".format(GPS_data.lon/10000000.0), "{:+4.1f}".format(GPS_data.heightSea/1000.0))
+		#	print ("Loc Accuracy:", "{:+3.3f}".format(GPS_data.horAcc/1000.0), "{:+3.3f}".format(GPS_data.verAcc/1000.0))
 		#print pitch_angle_gyro
 		#print accels
 		timer_1hz = current_time
