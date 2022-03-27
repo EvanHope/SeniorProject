@@ -535,7 +535,7 @@ while True:
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
 			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
-			#print rad2Deg(yawRel)
+			print(Paltitude)
 			
 			counter = counter + 1
 			#Set motor values
