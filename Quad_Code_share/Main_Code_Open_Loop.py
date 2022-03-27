@@ -93,9 +93,9 @@ ki = .0015
 kd = 3.2
 
 # no overshoot ALTITUDE
-kpz = .04019
-kiz = .107031
-kdz = .010061
+kpz = 4.2
+kiz = 1.4
+kdz = 5.8
 
 
 
