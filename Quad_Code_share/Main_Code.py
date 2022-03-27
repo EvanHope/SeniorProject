@@ -508,12 +508,12 @@ while True:
 
 		#uncomment for pitch and roll controller control:
 		#set rollDes and PitchDes to 0 to ensure drone always tries to stay stable
-		#rollDes = rangeD(float(rc_data[0]),rc0c)
-		#pitchDes = rangeD(float(rc_data[1]),rc0c)
-		#throttle = rangeD(float(rc_data[2]),rc2c)
-		rollDes = 0
-		pitchDes = 0
-		throttle = 1
+		rollDes = rangeD(float(rc_data[0]),rc0c)
+		pitchDes = rangeD(float(rc_data[1]),rc0c)
+		throttle = rangeD(float(rc_data[2]),rc2c)
+		#rollDes = 0
+		#pitchDes = 0
+		#throttle = 1
 		#throttle = 1.1 #for testing motors
 		yawRateDes = 0
 		
@@ -553,7 +553,6 @@ while True:
 		# uncomment for onboard roll/pitch
 		rollError = rollDes - rad2Deg(roll)
 		pitchError = pitchDes - rad2Deg(pitch)
-		altitudeError = target_alt - current_alt
 		#print(current_alt)
 		#print(altitudeError)
 
@@ -601,20 +600,11 @@ while True:
 			pitchErrorSum = pitchErrorSum + (pitchError + pitchErrorPrev)*(timeStep/2.0)
 			#print(rollErrorSum)
 			pitchIntegral = ki * deg2Rad(pitchErrorSum)
-
-			altitudePorportional = kpz * altitudeError
-
-			alt_velocity = abs(prev_alt - current_alt) / timeStep #Calculates alt_velocity WARNING: inaccurate measurement
-			altitudeDerivative = kdz * -alt_velocity #alt_velocity may be inaccurate or wrong testing is needed
-
-			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0) 
-
-			altitudeIntegral = kiz * altitudeErrorSum
 			
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
-		#if(float(rc_data[4]) > 1700.0): #rc_data[4] is C and D on controller
-		if(1):
+		if(float(rc_data[4]) > 1700.0): #rc_data[4] is C and D on controller
+		#if(1):
 			timer = time.time() - timein
 			if(rollErrorSum > .5):
 				rollErrorSum = 0
@@ -624,72 +614,15 @@ while True:
 
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
-			#Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
-			#print("this is Paltitude:" + Paltitude)
-			#print rad2Deg(yawRel)
 			
 			counter = counter + 1
-			if(excitation):
-				timer=(time.time()-timein)
-				frequencySweep = math.sin(2*math.pi*timer*(.2+.001*n))
-				n=n+1
-				
-				motor_right = throttle - A * frequencySweep
-				motor_left = throttle + A * frequencySweep
-	
-			else:
-				#motor_right = 1.4 + sinr1 
-				#motor_left = 1.4 + sinr2 
-				#motor_front = 0
-				#motor_back = 0
-				motor_right = throttle - Proll
-				#print (motor_right)
-				motor_left = throttle + Proll
-				#print (motor_left)
-				motor_front = throttle + Ppitch
-				#print (motor_front)
-				motor_back = throttle - Ppitch
-				#print (motor_back)
-			zeroed = True
-		elif(float(rc_data[4]) < 1700.0 and float(rc_data[4]) > 1600): #not sure if this is the correct values
-			#altitude control enabled!!! WARNING
-			timer = time.time() - timein
-			if(rollErrorSum > .5):
-				rollErrorSum = 0
-			if(not zeroed):
-				rollErrorSum = 0
-				yawOffset = yaw
 
-			Proll = rollProportional+rollIntegral+rollDerivative
-			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
-			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
-			#print("this is Paltitude:" + Paltitude)
-			#print rad2Deg(yawRel)
-			
-			counter = counter + 1
-			if(excitation):
-				timer=(time.time()-timein)
-				frequencySweep = math.sin(2*math.pi*timer*(.2+.001*n))
-				n=n+1
-				
-				motor_right = throttle - A * frequencySweep
-				motor_left = throttle + A * frequencySweep
-	
-			else:
-				#motor_right = 1.4 + sinr1 
-				#motor_left = 1.4 + sinr2 
-				#motor_front = 0
-				#motor_back = 0
-				motor_right = Paltitude - Proll
-				#print (motor_right)
-				motor_left = Paltitude + Proll
-				#print (motor_left)
-				motor_front = Paltitude + Ppitch
-				#print (motor_front)
-				motor_back = Paltitude - Ppitch
-				#print (motor_back)
+			motor_right = throttle - Proll
+			motor_left = throttle + Proll
+			motor_front = throttle + Ppitch
+			motor_back = throttle - Ppitch
+
 			zeroed = True
-			
 		else:
 			motor_right = 0
 			motor_left = 0
@@ -701,9 +634,7 @@ while True:
 		
 		
 		pitchErrorPrev = pitchError
-		rollErrorPrev = rollError
-		#altitudeErrorPrev = altitudeError
-		
+		rollErrorPrev = rollError		
 		
 		
 		
@@ -823,14 +754,6 @@ while True:
 		print(pitchError)
 
 		print("yaw: ",yaw)
-
-		print("target altitude:")
-		print(target_alt)
-		print("current altitude:")
-		print(current_alt)
-		print("altitude error:")
-		print(altitudeError)
-		
 
 
 		print("right motor value:")
