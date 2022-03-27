@@ -407,9 +407,9 @@ while True:
 		# -------------------------OPEN LOOP---------------------------------------------
 		#xDes = GPS location converted?
 		#yDes = GPS location converted?
-		#rollDes = eq
-		#pitchDes = eq
-		#throttle = eq
+		rollDes = 0 #this will be equations for open loop
+		pitchDes = 0
+		throttle = 0
 		# -------------------------STABILIZATION-----------------------------------------
 		#uncomment for rc controller
 		#rollDes = rangeD(float(rc_data[0]),rc0c)
