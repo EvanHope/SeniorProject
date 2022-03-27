@@ -252,10 +252,10 @@ baro.readTemperature()
 baro.calculatePressureAndTemperature()
 ground_alt = 0
 target_alt = 10 #target alt experimentation.
-if baro.PRES < 1013: # small check in case barometer pressure is invalid
-	ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
+#if baro.PRES < 1013: # small check in case barometer pressure is invalid
+	#ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
 	#print("altitude ground?:" + ground_alt)
-	target_alt = target_alt + ground_alt
+	#target_alt = target_alt + ground_alt
 	#print("altitude target?:" + target_alt)
 	#ground_alt = 0
 led.setColor('Red')
