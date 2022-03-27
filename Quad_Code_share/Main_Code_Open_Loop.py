@@ -155,7 +155,7 @@ wn = 4.96 # experimental
 # current_alt has been zeroed out to prevent the code from wigging out
 current_alt = 0;
 prev_alt = 0
-
+Paltitude = 0 #initilization
 
 
 # Getting next available log file number and creating header#
@@ -510,7 +510,7 @@ while True:
 
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
-			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative #COMMENT THIS FOR REAL TESTING
+			#Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative #COMMENT THIS FOR REAL TESTING
 			#print("this is Paltitude:" + Paltitude)
 			#print rad2Deg(yawRel)
 			
