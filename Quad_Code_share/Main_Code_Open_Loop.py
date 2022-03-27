@@ -537,6 +537,8 @@ while True:
 			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
 			if(Paltitude > 2):
 				Paltitude = 2
+			elif(Paltitude < 0):
+				Paltitude = 0
 			print(Paltitude)
 			
 			counter = counter + 1
