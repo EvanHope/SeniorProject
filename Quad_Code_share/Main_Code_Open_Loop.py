@@ -510,7 +510,7 @@ while True:
 
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
-			#Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
+			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative #COMMENT THIS FOR REAL TESTING
 			#print("this is Paltitude:" + Paltitude)
 			#print rad2Deg(yawRel)
 			
