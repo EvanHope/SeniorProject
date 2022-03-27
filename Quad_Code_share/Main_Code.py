@@ -508,9 +508,12 @@ while True:
 
 		#uncomment for pitch and roll controller control:
 		#set rollDes and PitchDes to 0 to ensure drone always tries to stay stable
-		rollDes = rangeD(float(rc_data[0]),rc0c)
-		pitchDes = rangeD(float(rc_data[1]),rc0c)
-		throttle = rangeD(float(rc_data[2]),rc2c)
+		#rollDes = rangeD(float(rc_data[0]),rc0c)
+		#pitchDes = rangeD(float(rc_data[1]),rc0c)
+		#throttle = rangeD(float(rc_data[2]),rc2c)
+		rollDes = 0
+		pitchDes = 0
+		throttle = 1
 		#throttle = 1.1 #for testing motors
 		yawRateDes = 0
 		
