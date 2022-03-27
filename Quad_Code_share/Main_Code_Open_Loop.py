@@ -538,7 +538,7 @@ while True:
 			if(Paltitude > 2):
 				Paltitude = 2
 			elif(Paltitude < 0):
-				Paltitude = 0
+				Paltitude = 0.1
 			print(Paltitude)
 			
 			counter = counter + 1
