@@ -408,7 +408,7 @@ while True:
 		rates2[0] = rates[1]
 		rates2[1] = rates[0]
 		rates2[2] = -rates[2]
-		AHRS_data.update_imu(rates2, accels2, m9m)
+		AHRS_data.update_imu(rates2, accels2)
 		yaw,roll,pitch = quat2euler(AHRS_data.quaternion,axes='rzxy')
 		baro_timer = baro_timer + 1
 		if (baro_timer == 1): baro.refreshPressure()
