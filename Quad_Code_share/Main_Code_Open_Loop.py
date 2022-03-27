@@ -539,7 +539,7 @@ while True:
 				Paltitude = 2
 			elif(Paltitude < 0):
 				Paltitude = 0.1
-			print(Paltitude)
+			#print(Paltitude)
 			
 			counter = counter + 1
 			#Set motor values
