@@ -822,12 +822,15 @@ while True:
 		print("pitch error:")
 		print(pitchError)
 
+		print("yaw: ",yaw)
+
 		print("target altitude:")
 		print(target_alt)
 		print("current altitude:")
 		print(current_alt)
 		print("altitude error:")
 		print(altitudeError)
+		
 
 
 		print("right motor value:")
