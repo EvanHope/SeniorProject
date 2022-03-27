@@ -199,7 +199,7 @@ target_alt = 2 #target alt experimentation.
 if baro.PRES < 1013: # small check in case barometer pressure is invalid
 	ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
 	print("altitude ground?:" , ground_alt)
-	target_alt = target_alt + ground_alt
+	#target_alt = target_alt + ground_alt
 led.setColor('Red')
 time.sleep(1)
 
