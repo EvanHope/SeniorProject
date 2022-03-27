@@ -592,7 +592,11 @@ while True:
 		
 		####		 END STUDENT SECTION				####
 		#---------------------------------------------------#
-		
+		print("front:" , motor_front)
+		print("back:" , motor_back)
+		print("left':" , motor_left)
+		print("right:" , motor_right)
+
 		
 		motor_front_pwm.set_duty_cycle(motor_front)
 		motor_back_pwm.set_duty_cycle(motor_back)
