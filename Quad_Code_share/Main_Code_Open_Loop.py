@@ -151,13 +151,10 @@ wn = 4.96 # experimental
 #kp = wn**2.0
 #kd = 2.0*zeta*wn
 
-# ----------------------------------------------------------------------
-# Nic and Shawn's variables --------------------------------END---------
-# ----------------------------------------------------------------------
-
 
 # current_alt has been zeroed out to prevent the code from wigging out
 current_alt = 0;
+prev_alt = 0
 
 
 
