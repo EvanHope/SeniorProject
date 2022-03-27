@@ -610,8 +610,8 @@ while True:
 			
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
-		if(float(rc_data[4]) > 1700.0): #rc_data[4] is C and D on controller
-		#if(1):
+		#if(float(rc_data[4]) > 1700.0): #rc_data[4] is C and D on controller
+		if(1):
 			timer = time.time() - timein
 			if(rollErrorSum > .5):
 				rollErrorSum = 0
