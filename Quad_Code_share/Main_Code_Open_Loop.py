@@ -522,7 +522,8 @@ while True:
 			motor_back = throttle - Ppitch
 
 			zeroed = True
-		elif(float(rc_data[4]) < 1700.0 and float(rc_data[4]) > 1600): #if kill switch is in middle(I think) autonomous altitude
+		#elif(float(rc_data[4]) < 1700.0 and float(rc_data[4]) > 1600): #if kill switch is in middle(I think) autonomous altitude
+		elif(1): #for testing remove after
 			#altitude control enabled!!! WARNING
 			timer = time.time() - timein
 			if(rollErrorSum > .5):
