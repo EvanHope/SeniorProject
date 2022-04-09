@@ -4,6 +4,6 @@ from time import sleep
 camera = PiCamera()
 
 camera.start_preview()
-sleep(20)
-camera.capture('/home/pi/Desktop/image.jpg')
+sleep(5)
+camera.capture('/Navio2/SeniorProject/Quad_Code_share/Pictures/image.jpg')
 camera.stop_preview()
