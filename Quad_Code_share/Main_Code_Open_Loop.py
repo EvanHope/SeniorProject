@@ -93,9 +93,9 @@ ki = .0015
 kd = 3.2
 
 # no overshoot ALTITUDE
-kpz = 4.2
+kpz = .5
 kiz = 1.4
-kdz = 5.8
+kdz = 2.8
 
 
 
@@ -195,7 +195,7 @@ time.sleep(0.01) # Waiting for temperature data ready 10ms
 baro.readTemperature()
 baro.calculatePressureAndTemperature()
 ground_alt = 0
-target_alt = 10 #target alt experimentation.
+target_alt = 3 #target alt experimentation.
 if baro.PRES < 1013: # small check in case barometer pressure is invalid
 	ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
 	print("altitude ground?:" , ground_alt)
