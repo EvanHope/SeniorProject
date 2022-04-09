@@ -535,8 +535,8 @@ while True:
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
 			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
-			if(Paltitude > 2):
-				Paltitude = 2
+			if(Paltitude > 1.5):
+				Paltitude = 1.5
 			elif(Paltitude < 0):
 				Paltitude = 0.1
 			#print(Paltitude)
