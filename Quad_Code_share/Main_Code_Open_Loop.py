@@ -499,31 +499,31 @@ while True:
 			
 		# -------------------------Kill Switch------------------------------------
 		# everything in here only happens when the switch is on (up) manual control
-		if(float(rc_data[4]) > 1700.0): #rc_data[4] is C and D on controller
+		#if(float(rc_data[4]) > 1700.0): #rc_data[4] is C and D on controller
 		#if(1):
-			timer = time.time() - timein
-			if(rollErrorSum > .5):
-				rollErrorSum = 0
-			if(not zeroed):
-				rollErrorSum = 0
-				yawOffset = yaw
-
-			Proll = rollProportional+rollIntegral+rollDerivative
-			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
+		#	timer = time.time() - timein
+		#	if(rollErrorSum > .5):
+		#		rollErrorSum = 0
+		#	if(not zeroed):
+		#		rollErrorSum = 0
+		#		yawOffset = yaw
+#
+#			Proll = rollProportional+rollIntegral+rollDerivative
+#			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
 			#Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative #COMMENT THIS FOR REAL TESTING
 			#print("this is Paltitude:" + Paltitude)
 			#print rad2Deg(yawRel)
 			
-			counter = counter + 1
+#			counter = counter + 1
 	
-			motor_right = throttle - Proll
-			motor_left = throttle + Proll
-			motor_front = throttle + Ppitch
-			motor_back = throttle - Ppitch
+#			motor_right = throttle - Proll
+#			motor_left = throttle + Proll
+#			motor_front = throttle + Ppitch
+#			motor_back = throttle - Ppitch
 
-			zeroed = True
-		#elif(float(rc_data[4]) < 1700.0 and float(rc_data[4]) > 1600): #if kill switch is in middle(I think) autonomous altitude
-		elif(1): #for testing remove after
+#			zeroed = True
+		if(float(rc_data[4]) > 1700.0): #if kill switch is down towards user autonomous altitude
+		#elif(1): #for testing remove after
 			#altitude control enabled!!! WARNING
 			timer = time.time() - timein
 			if(rollErrorSum > .5):
