@@ -537,8 +537,8 @@ while True:
 			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
 			if(Paltitude > 1.5):
 				Paltitude = 1.5
-			elif(Paltitude < 0):
-				Paltitude = 0.1
+			elif(Paltitude < 0.5):
+				Paltitude = 0.5
 			#print(Paltitude)
 			
 			counter = counter + 1
