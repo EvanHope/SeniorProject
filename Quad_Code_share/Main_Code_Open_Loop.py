@@ -547,7 +547,10 @@ while True:
 			motor_left = Paltitude + Proll
 			motor_front = Paltitude + Ppitch
 			motor_back = Paltitude - Ppitch
-
+			print(motor_right)
+			print(motor_left)
+			print(motor_front)
+			print(motor_back)
 
 			zeroed = True
 			
