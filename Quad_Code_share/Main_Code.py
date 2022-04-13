@@ -107,7 +107,7 @@ kd = .011319
 # Kevin Tuning
 kp = .28
 ki = 0
-kd = 3.2
+kd = 4.0
 #kp = 0.5
 #ki = 0.0015
 #kd = 3.2
