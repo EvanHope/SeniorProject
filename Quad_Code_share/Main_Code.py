@@ -553,36 +553,27 @@ while True:
 		# uncomment for onboard roll/pitch
 		rollError = rollDes - rad2Deg(roll)
 		pitchError = pitchDes - rad2Deg(pitch)
+		yawRateError = yawRateDes - rates[2]
 		#print(current_alt)
 		#print(altitudeError)
+
 
 		
 		#print(rc_data)
 		
-		#wn = rangeD(float(rc_data[2]),rc2c)
-		# recalculate at each time step to account for changing wn
-		#kp = wn**2.0
-		#kd = 2.0*zeta*wn
-		
-		#kd = rangeD(float(rc_data[2]),rc2c)
-		#print kd
-		
-		#kd = rangeD(float(rc_data[5]),rc5c)
-		#kp = rangeD(float(rc_data[6]),rc6c)
-		#print kp, kd
 		
 		if(not excitation):
 			# NDI control
 			#Proll = (kd*rad2Deg(float(-rates[1])))/(B*1.8)+(kp*(rollError))/B-(A*rad2Deg(float(rates[1])))/(B*1.4)
 			
 			
-			#yawProportional = kpy * rates[2]
+			yawProportional = kpy * rates[2]
 			#derivative = kd * deg2Rad((rollError - rollErrorPrev)/timeStep)
-			#yawDerivative = kdy * -rates[2]
+			yawDerivative = kdy * -rates[2]
 			#print(deg2Rad((rollError - rollErrorPrev)/timeStep))
-			#yawErrorSum = yawErrorSum + (yawError + yawErrorPrev)*(timeStep/2.0)
+			yawErrorSum = yawErrorSum + (yawRateError + yawRateErrorPrev)*(timeStep/2.0)
 			#print(rollErrorSum)
-			#yawIntegral = ki * deg2Rad(yawErrorSum)
+			yawIntegral = ki * deg2Rad(yawErrorSum)
 			
 			
 			rollProportional = kp * deg2Rad(rollError)
@@ -614,13 +605,14 @@ while True:
 
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
+			Pyaw = yawProportional+yawIntegral+yawDerivative
 			
 			counter = counter + 1
 
-			motor_right = throttle - Proll
-			motor_left = throttle + Proll
-			motor_front = throttle + Ppitch
-			motor_back = throttle - Ppitch
+			motor_right = throttle - Proll - Pyaw
+			motor_left = throttle + Proll - Pyaw
+			motor_front = throttle + Ppitch + Pyaw
+			motor_back = throttle - Ppitch + Pyaw
 
 			zeroed = True
 		else:
@@ -634,7 +626,8 @@ while True:
 		
 		
 		pitchErrorPrev = pitchError
-		rollErrorPrev = rollError		
+		rollErrorPrev = rollError
+		yawRateErrorPrev = yawRateError		
 		
 		
 		
