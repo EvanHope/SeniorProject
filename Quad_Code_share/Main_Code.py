@@ -393,6 +393,7 @@ altitudeErrorSum = 0
 altitudeErrorPrev = 0
 yawErrorSum = 0
 yawRateErrorPrev = 0
+yawErrorPrev = 0
 print ("Starting main loop: here we go!")
 while True:
 	current_time = (time.time()-timein)*1000.0
@@ -521,6 +522,7 @@ while True:
 		#throttle = 1
 		#throttle = 1.1 #for testing motors
 		yawRateDes = 0
+		yawDes = 0
 		
 		if rollDes < 7 and rollDes >-7:
 			rollDes = 0
@@ -559,6 +561,7 @@ while True:
 		rollError = rollDes - rad2Deg(roll)
 		pitchError = pitchDes - rad2Deg(pitch)
 		yawRateError = yawRateDes - rates[2]
+		yawError = yawDes - yaw
 		#print(current_alt)
 		#print(altitudeError)
 
@@ -572,11 +575,11 @@ while True:
 			#Proll = (kd*rad2Deg(float(-rates[1])))/(B*1.8)+(kp*(rollError))/B-(A*rad2Deg(float(rates[1])))/(B*1.4)
 			
 			
-			yawProportional = kpy * rates[2]
+			yawProportional = kpy * deg2Rad(yawError)
 			#derivative = kd * deg2Rad((rollError - rollErrorPrev)/timeStep)
-			yawDerivative = kdy * -rates[2]
+			yawDerivative = kdy * -deg2Rad(rates[2])
 			#print(deg2Rad((rollError - rollErrorPrev)/timeStep))
-			yawErrorSum = yawErrorSum + (yawRateError + yawRateErrorPrev)*(timeStep/2.0)
+			yawErrorSum = yawErrorSum + (yawError + yawErrorPrev)*(timeStep/2.0)
 			#print(rollErrorSum)
 			yawIntegral = ki * deg2Rad(yawErrorSum)
 			
@@ -606,7 +609,7 @@ while True:
 				rollErrorSum = 0
 			if(not zeroed):
 				rollErrorSum = 0
-				yawOffset = yaw
+				#yawOffset = yaw
 
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
@@ -633,6 +636,7 @@ while True:
 		pitchErrorPrev = pitchError
 		rollErrorPrev = rollError
 		yawRateErrorPrev = yawRateError		
+		yawPrev = yaw
 		
 		
 		
@@ -664,15 +668,6 @@ while True:
 		
 		####		 END STUDENT SECTION				####
 		#---------------------------------------------------#
-		
-		print("right motor value:")
-		print (motor_right)
-		print("left motor value:")
-		print (motor_left)
-		print("front motor value:")
-		print (motor_front)
-		print("back motor value:")
-		print (motor_back)
 
 
 		motor_front_pwm.set_duty_cycle(motor_front)
