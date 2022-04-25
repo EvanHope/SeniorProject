@@ -99,9 +99,9 @@ kd = .011319
 #kd = .0897
 
 # Disnmore Herrington Tuning using this now
-kp = .210
-ki = .015
-kd = .044
+kp = 0.25
+ki = 0.0
+kd = 0.0
 
 
 # Kevin Tuning
