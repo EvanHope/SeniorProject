@@ -99,18 +99,18 @@ kd = .011319
 #kd = .0897
 
 # Disnmore Herrington Tuning using this now
-kp = .210
-ki = .015
-kd = .044
+#kp = 0.25
+#ki = 0.0
+#kd = 0.0
 
 
 # Kevin Tuning
 #kp = .28
 #ki = 0
 #kd = 3.0
-#kp = 0.5
-#ki = 0.0015
-#kd = 3.2
+kp = 0.295
+ki = 0.0015
+kd = 3.2
 
 # Disnmore Herrington Tuning RollSimp
 #kp = .05
