@@ -85,10 +85,10 @@ zeroed = False
 
 # yaw gains
 kpy = 19.39823
-kiy = .387965
+#kiy = .387965
 kdy = 7.525825
 #kpy = 1
-#kiy = 0
+kiy = 0
 #kdy = 0
 
 # ZN tuning
