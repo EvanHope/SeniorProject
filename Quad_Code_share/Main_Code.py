@@ -614,9 +614,9 @@ while True:
 			
 			counter = counter + 1
 
-			motor_right = throttle - Proll - Pyaw
+			motor_right = throttle - Proll + Pyaw
 			motor_left = throttle + Proll - Pyaw
-			motor_front = throttle + Ppitch + Pyaw
+			motor_front = throttle + Ppitch - Pyaw
 			motor_back = throttle - Ppitch + Pyaw
 
 			zeroed = True
