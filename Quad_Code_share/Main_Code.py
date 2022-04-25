@@ -749,6 +749,8 @@ while True:
 		print(pitchError)
 
 		print("yaw: ",yaw)
+		print("Yaw Rate Error: ",yawRateError)
+		print("Pyaw: ",Pyaw)
 
 
 		print("right motor value:")
