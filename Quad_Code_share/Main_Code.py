@@ -755,11 +755,11 @@ while True:
 		print("pitch error:")
 		print(pitchError)
 
-		print("yaw: ",yaw)
+		print("yaw: ",rad2Deg(yaw))
 		print("Yaw Rate Error: ",yawRateError)
 		print("Pyaw: ",Pyaw)
 		print("YawPorportional: ", yawProportional)
-		print("rate[2]:", rates[2])
+		print("rate[2]:", rad2Deg(rates[2]))
 
 
 		print("right motor value:")
