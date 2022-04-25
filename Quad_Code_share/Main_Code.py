@@ -84,12 +84,12 @@ zeroed = False
 # rcCal = false
 
 # yaw gains
-#kpy = 19.39823
-#kiy = .387965
-#kdy = 7.525825
-kpy = 1
-kiy = 0
-kdy = 0
+kpy = 19.39823
+kiy = .387965
+kdy = 7.525825
+#kpy = 1
+#kiy = 0
+#kdy = 0
 
 # ZN tuning
 kp = .12057
@@ -614,18 +614,18 @@ while True:
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
 			Pyaw = yawProportional+yawIntegral+yawDerivative
-						
+
 			counter = counter + 1
 
-			motor_right = throttle - Proll
-			motor_left = throttle + Proll
-			motor_front = throttle + Ppitch
-			motor_back = throttle - Ppitch
+			#motor_right = throttle - Proll
+			#motor_left = throttle + Proll
+			#motor_front = throttle + Ppitch
+			#motor_back = throttle - Ppitch
 
-			#motor_right = throttle - Proll + Pyaw
-			#motor_left = throttle + Proll - Pyaw
-			#motor_front = throttle + Ppitch - Pyaw
-			#motor_back = throttle - Ppitch + Pyaw
+			motor_right = throttle - Proll + Pyaw
+			motor_left = throttle + Proll - Pyaw
+			motor_front = throttle + Ppitch - Pyaw
+			motor_back = throttle - Ppitch + Pyaw
 
 			zeroed = True
 		else:
