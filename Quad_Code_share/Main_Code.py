@@ -388,6 +388,8 @@ accels2 = [0,0,0]
 alts = 0
 altitudeErrorSum = 0
 altitudeErrorPrev = 0
+yawErrorSum = 0
+yawRateErrorPrev = 0
 print ("Starting main loop: here we go!")
 while True:
 	current_time = (time.time()-timein)*1000.0
