@@ -575,7 +575,7 @@ while True:
 			#Proll = (kd*rad2Deg(float(-rates[1])))/(B*1.8)+(kp*(rollError))/B-(A*rad2Deg(float(rates[1])))/(B*1.4)
 			
 			
-			yawProportional = kpy * deg2Rad(rates[2])
+			yawProportional = kpy * deg2Rad(yawRateError)	
 			#derivative = kd * deg2Rad((rollError - rollErrorPrev)/timeStep)
 			yawDerivative = kdy * -deg2Rad(rates[2])
 			#print(deg2Rad((rollError - rollErrorPrev)/timeStep))
@@ -756,7 +756,7 @@ while True:
 		print(pitchError)
 
 		print("yaw: ",rad2Deg(yaw))
-		print("Yaw Rate Error: ",yawRateError)
+		print("Yaw Rate Error: ", deg2Rad(yawRateError))
 		print("Pyaw: ",Pyaw)
 		print("YawPorportional: ", yawProportional)
 		print("rate[2]:", rad2Deg(rates[2]))
