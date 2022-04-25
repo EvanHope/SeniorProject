@@ -759,6 +759,7 @@ while True:
 		print("Yaw Rate Error: ",yawRateError)
 		print("Pyaw: ",Pyaw)
 		print("YawPorportional: ", yawProportional)
+		print("rate[2]:", rates[2])
 
 
 		print("right motor value:")
