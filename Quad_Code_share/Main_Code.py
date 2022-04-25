@@ -614,6 +614,7 @@ while True:
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
 			Pyaw = yawProportional+yawIntegral+yawDerivative
+			print(Pyaw)
 			
 			counter = counter + 1
 
