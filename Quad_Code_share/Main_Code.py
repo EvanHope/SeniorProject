@@ -583,7 +583,7 @@ while True:
 			#print(deg2Rad((rollError - rollErrorPrev)/timeStep))
 			yawErrorSum = yawErrorSum + (yawRateError + yawRateErrorPrev)*(timeStep/2.0)
 			#print(rollErrorSum)
-			yawIntegral = ki * deg2Rad(yawErrorSum)
+			yawIntegral = kiy * deg2Rad(yawErrorSum)
 			print(yawIntegral)
 			
 			
