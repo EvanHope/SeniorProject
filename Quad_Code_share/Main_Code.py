@@ -87,7 +87,7 @@ zeroed = False
 #kpy = 19.39823
 #kiy = .387965
 #kdy = 7.525825
-kpy = 1
+kpy = 0.1
 kiy = 0
 kdy = 0
 
