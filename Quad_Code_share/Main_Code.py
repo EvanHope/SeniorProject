@@ -767,7 +767,7 @@ while True:
 		print(pitchError)
 
 		print("yaw: ",rad2Deg(yaw))
-		print("Yaw Rate Error: ", deg2Rad(yawRateError))
+		print("Yaw Error: ", deg2Rad(yawError))
 		print("Pyaw: ",Pyaw)
 		print("YawPorportional: ", yawProportional)
 		print("rate[2]:", rad2Deg(rates[2]))
