@@ -575,16 +575,19 @@ while True:
 			#Proll = (kd*rad2Deg(float(-rates[1])))/(B*1.8)+(kp*(rollError))/B-(A*rad2Deg(float(rates[1])))/(B*1.4)
 			
 			
-			yawProportional = kpy * deg2Rad(yawRateError)	
-			print(yawProportional)
+			#yawProportional = kpy * deg2Rad(yawRateError)	
+			yawProportional = kpy * deg2Rad(yawError)	
+
+			#print(yawProportional)
 			#derivative = kd * deg2Rad((rollError - rollErrorPrev)/timeStep)
+			#yawDerivative = kdy * -deg2Rad(rates[2])
 			yawDerivative = kdy * -deg2Rad(rates[2])
-			print(yawDerivative)
+			#print(yawDerivative)
 			#print(deg2Rad((rollError - rollErrorPrev)/timeStep))
-			yawErrorSum = yawErrorSum + (yawRateError + yawRateErrorPrev)*(timeStep/2.0)
+			yawErrorSum = yawErrorSum + (yawError + yawErrorPrev)*(timeStep/2.0)
 			#print(rollErrorSum)
 			yawIntegral = kiy * deg2Rad(yawErrorSum)
-			print(yawIntegral)
+			#print(yawIntegral)
 			
 			
 			rollProportional = kp * deg2Rad(rollError)
