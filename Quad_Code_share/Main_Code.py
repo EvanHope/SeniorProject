@@ -394,6 +394,11 @@ altitudeErrorPrev = 0
 yawErrorSum = 0
 yawRateErrorPrev = 0
 yawErrorPrev = 0
+
+yaw,roll,pitch = quat2euler(AHRS_data.quaternion,axes='rzxy')
+yawDes = yaw
+
+
 print ("Starting main loop: here we go!")
 while True:
 	current_time = (time.time()-timein)*1000.0
@@ -522,7 +527,7 @@ while True:
 		#throttle = 1
 		#throttle = 1.1 #for testing motors
 		yawRateDes = 0
-		yawDes = 0
+		#yawDes = 0 # this is set right before main loop temp
 		
 		if rollDes < 7 and rollDes >-7:
 			rollDes = 0
