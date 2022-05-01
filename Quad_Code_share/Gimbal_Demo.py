@@ -780,6 +780,7 @@ while True:
 			print("roll set to 10")
 		elif democounter >= 30 and democounter < 45:
 			rollDes = 0
+			pitchDes = 0
 			throttle = 1.2
 			print("pitch set to 10")
 		elif democounter >= 45 and democounter < 55:
