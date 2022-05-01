@@ -778,16 +778,16 @@ while True:
 			pitchDes = 15
 			throttle = 1.2
 			print("roll set to 10")
-		elif democounter >= 30 and democounter < 45:
+		elif democounter >= 30 and democounter < 35:
 			rollDes = 0
 			pitchDes = 0
 			throttle = 1.2
 			print("pitch set to 10")
-		elif democounter >= 45 and democounter < 55:
+		elif democounter >= 35 and democounter < 45:
 			pitchDes = 15
 			rollDes = -15
 			throttle = 1.2
-		elif democounter >= 55 and democounter < 60:
+		elif democounter >= 45 and democounter < 50:
 			throttle = 1.2
 			pitchDes = 0
 			rollDes = 0
