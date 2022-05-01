@@ -88,8 +88,8 @@ zeroed = False
 #kpy = 19.39823
 #kiy = .387965
 #kdy = 7.525825
-kpy = 0.5
-kiy = 0
+kpy = 0.4
+kiy = 0.05
 kdy = 0
 
 # ZN tuning
@@ -640,10 +640,10 @@ while True:
 			#motor_front = throttle + Ppitch
 			#motor_back = throttle - Ppitch
 
-			motor_right = throttle - Proll - Pyaw
-			motor_left = throttle + Proll - Pyaw
-			motor_front = throttle + Ppitch + Pyaw
-			motor_back = throttle - Ppitch + Pyaw
+			motor_right = throttle - Proll + Pyaw
+			motor_left = throttle + Proll + Pyaw
+			motor_front = throttle + Ppitch - Pyaw
+			motor_back = throttle - Ppitch - Pyaw
 
 			zeroed = True
 		else:
@@ -771,19 +771,20 @@ while True:
 			print ("waiting")
 			throttle = 1
 		elif democounter >= 10 and democounter < 20:
-			throttle = 1.2
+			throttle = 1.1
 			print("throttle on")
 		elif democounter >= 20 and democounter < 30:
 			rollDes = 10
-			throttle = 1.2
+			throttle = 1.1
 			print("roll set to 10")
 		elif democounter >= 30 and democounter < 40:
 			pitchDes = 10
-			throttle = 1.2
+			throttle = 1.1
 			rollDes = 0
 			print("pitch set to 10")
-		#elif democounter > 40 and democounter < 50:
-			#yawDes = 
+		elif democounter >= 40 and democounter < 45:
+			pitchDes = 0
+			throttle = 1.1
 		else:
 			throttle = 1
 			print("Done")
