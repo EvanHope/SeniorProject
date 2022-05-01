@@ -1,4 +1,5 @@
 import time
+from wsgiref.simple_server import demo_app
 import spidev
 import math
 import argparse 
@@ -21,8 +22,6 @@ import bufferShawn
 import numIntegration
 import kalmanFilterPython
 
-
-#Note we must find which rc input is rcdata 5 and 6
 # ----------------------------------------------------------------------
 # Nic and Shawn's variables -------------------------------START--------
 # ----------------------------------------------------------------------
@@ -53,8 +52,8 @@ rc2in = [1065,1970]
 #rc2in = [1073, 1925] # throttle
 #rc3in = [1072, 1922] # yaw, rudder
 #rc4in = [1065, 1933] # 3 pos flight mode switch, C
-rc5in = [1065, 1933] # extra sliders, can be used for tuning
-rc6in = [1065, 1933] # extra sliders, can be used for tuning
+#rc5in = [1065, 1933] # extra sliders, can be used for tuning
+#rc6in = [1065, 1933] # extra sliders, can be used for tuning
 #rc7in = [1065, 1933] # 3 position switch, E
 #rc8in = [1065, 1933] # 2 position switch, A
 
@@ -64,8 +63,8 @@ rc0out = [-30,30]
 rc1out = [.250,.500]
 #rc0outI = [.16,1.6]
 rc2out = [.99,1.75]
-rc5out = [.001,.01]
-rc6out = [.01,1]
+#rc5out = [.001,.01]
+#rc6out = [.01,1]
 
 throttle = 1.1
 
@@ -75,8 +74,8 @@ rc0c = rangeCoeff(rc0in,rc0out)
 rc1c = rangeCoeff(rc1in,rc1out)
 #rc0cI = rangeCoeff(rc0in,rc0outI)
 rc2c = rangeCoeff(rc2in,rc2out)
-rc5c = rangeCoeff(rc5in,rc5out)
-rc6c = rangeCoeff(rc6in,rc6out)
+#rc5c = rangeCoeff(rc5in,rc5out)
+#rc6c = rangeCoeff(rc6in,rc6out)
 
 # set this flag to true to run the freq sweep, otherwise disable
 excitation = False
@@ -86,14 +85,41 @@ zeroed = False
 # rcCal = false
 
 # yaw gains
-kpy = 19.39823
-kiy = .387965
-kdy = 7.525825
+#kpy = 19.39823
+#kiy = .387965
+#kdy = 7.525825
+kpy = 0.5
+kiy = 0
+kdy = 0
 
-#Adjustable PID
-kp = .295
-ki = .0015
+# ZN tuning
+kp = .12057
+ki = .321092
+kd = .011319
+
+# Disnmore Herrington Tuning
+#kp = .508
+#ki = .00001
+#kd = .0897
+
+# Disnmore Herrington Tuning using this now
+#kp = 0.25
+#ki = 0.0
+#kd = 0.0
+
+
+# Kevin Tuning
+#kp = .28
+#ki = 0
+#kd = 3.0
+kp = 0.295
+ki = 0.0015
 kd = 3.2
+
+# Disnmore Herrington Tuning RollSimp
+#kp = .05
+#ki = .0
+#kd = .000
 
 # no overshoot ALTITUDE
 kpz = .04019
@@ -156,6 +182,9 @@ yawOffset = 0
 stepInput = False
 counter = 0
 
+prev_alt = 0
+
+
 # set up encoder variables, encoder0 is used to set the starting position to 0 degrees
 rollEnc = 0
 encoder0 = 0
@@ -185,7 +214,7 @@ else:
 
 
 # current_alt has been zeroed out to prevent the code from wigging out
-current_alt = 0;
+current_alt = 0
 
 
 
@@ -227,10 +256,10 @@ baro.readTemperature()
 baro.calculatePressureAndTemperature()
 ground_alt = 0
 target_alt = 10 #target alt experimentation.
-if baro.PRES < 1013: # small check in case barometer pressure is invalid
-	ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
+#if baro.PRES < 1013: # small check in case barometer pressure is invalid
+	#ground_alt = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
 	#print("altitude ground?:" + ground_alt)
-	target_alt = target_alt + ground_alt
+	#target_alt = target_alt + ground_alt
 	#print("altitude target?:" + target_alt)
 	#ground_alt = 0
 led.setColor('Red')
@@ -363,6 +392,20 @@ accels2 = [0,0,0]
 alts = 0
 altitudeErrorSum = 0
 altitudeErrorPrev = 0
+yawErrorSum = 0
+yawRateErrorPrev = 0
+yawErrorPrev = 0
+
+rollDes = 0
+pitchDes = 0
+throttle = 1
+#throttle = 1.1 #for testing motors
+yawRateDes = 0
+
+yaw,roll,pitch = quat2euler(AHRS_data.quaternion,axes='rzxy')
+yawDes = yaw
+democounter = 0
+
 print ("Starting main loop: here we go!")
 while True:
 	current_time = (time.time()-timein)*1000.0
@@ -384,7 +427,7 @@ while True:
 		rates2[1] = rates[0]
 		rates2[2] = -rates[2]
 		AHRS_data.update_imu(rates2, accels2)
-		roll,pitch,yaw = quat2euler(AHRS_data.quaternion,axes='rzxy')
+		yaw,roll,pitch = quat2euler(AHRS_data.quaternion,axes='rzxy')
 		baro_timer = baro_timer + 1
 		if (baro_timer == 1): baro.refreshPressure()
 		elif (baro_timer == 2): baro.readPressure()
@@ -394,13 +437,13 @@ while True:
 			baro.calculatePressureAndTemperature()
 			baro_timer = 0
 			#print baro.PRES
-			if baro.PRES < 1013: # Only update if barometer is valid
-				alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
+			#if baro.PRES < 1013: # Only update if barometer is valid
+				#alts = 44330.77*(1-(baro.PRES*100/101326)**0.1902632)
 				#print "altitude?:"
 				#print alts
 				#alts = 0
-				prev_alt = current_alt
-				current_alt = alts - ground_alt
+				#prev_alt = current_alt
+				#current_alt = alts - ground_alt
 				#print current_alt
 				
 		#buffer = GPS.bus.xfer2([100])
@@ -481,21 +524,17 @@ while True:
 		# -------------------------STABILIZATION-----------------------------------------
 		# read desired roll from RC stick
 
-
-		#PID changing
-		#kp = float(rc_data[3]),rc0c #note: must check which rc_data is best suited for these changes
-		#ki = float(rc_data[4]),rc0c
-		#kd = float(rc_data[5]),rc0c
-		kd = rangeD(float(rc_data[5]),rc5c)
-		kp = rangeD(float(rc_data[6]),rc6c)
-		print (kp, kd)
 		#uncomment for pitch and roll controller control:
 		#set rollDes and PitchDes to 0 to ensure drone always tries to stay stable
-		rollDes = rangeD(float(rc_data[0]),rc0c)
-		pitchDes = rangeD(float(rc_data[1]),rc0c)
-		throttle = rangeD(float(rc_data[2]),rc2c)
+		#rollDes = rangeD(float(rc_data[0]),rc0c)
+		#pitchDes = rangeD(float(rc_data[1]),rc0c)
+		#throttle = rangeD(float(rc_data[2]),rc2c)
+		#rollDes = 0
+		#pitchDes = 0
+		#throttle = 1
 		#throttle = 1.1 #for testing motors
-		yawRateDes = 0
+		#yawRateDes = 0
+		#yawDes = 0 # this is set right before main loop temp
 		
 		if rollDes < 7 and rollDes >-7:
 			rollDes = 0
@@ -533,37 +572,34 @@ while True:
 		# uncomment for onboard roll/pitch
 		rollError = rollDes - rad2Deg(roll)
 		pitchError = pitchDes - rad2Deg(pitch)
-		altitudeError = target_alt - current_alt
+		yawRateError = yawRateDes - rates[2]
+		yawError = yawDes - yaw
 		#print(current_alt)
 		#print(altitudeError)
+
 
 		
 		#print(rc_data)
 		
-		#wn = rangeD(float(rc_data[2]),rc2c)
-		# recalculate at each time step to account for changing wn
-		#kp = wn**2.0
-		#kd = 2.0*zeta*wn
-		
-		#kd = rangeD(float(rc_data[2]),rc2c)
-		#print kd
-		
-		#kd = rangeD(float(rc_data[5]),rc5c)
-		#kp = rangeD(float(rc_data[6]),rc6c)
-		#print kp, kd
 		
 		if(not excitation):
 			# NDI control
 			#Proll = (kd*rad2Deg(float(-rates[1])))/(B*1.8)+(kp*(rollError))/B-(A*rad2Deg(float(rates[1])))/(B*1.4)
 			
 			
-			#yawProportional = kpy * rates[2]
+			#yawProportional = kpy * deg2Rad(yawRateError)	
+			yawProportional = kpy * deg2Rad(yawError)	
+
+			#print(yawProportional)
 			#derivative = kd * deg2Rad((rollError - rollErrorPrev)/timeStep)
-			#yawDerivative = kdy * -rates[2]
+			#yawDerivative = kdy * -deg2Rad(rates[2])
+			yawDerivative = kdy * -deg2Rad(rates[2])
+			#print(yawDerivative)
 			#print(deg2Rad((rollError - rollErrorPrev)/timeStep))
-			#yawErrorSum = yawErrorSum + (yawError + yawErrorPrev)*(timeStep/2.0)
+			yawErrorSum = yawErrorSum + (yawError + yawErrorPrev)*(timeStep/2.0)
 			#print(rollErrorSum)
-			#yawIntegral = ki * deg2Rad(yawErrorSum)
+			yawIntegral = kiy * deg2Rad(yawErrorSum)
+			#print(yawIntegral)
 			
 			
 			rollProportional = kp * deg2Rad(rollError)
@@ -581,15 +617,6 @@ while True:
 			pitchErrorSum = pitchErrorSum + (pitchError + pitchErrorPrev)*(timeStep/2.0)
 			#print(rollErrorSum)
 			pitchIntegral = ki * deg2Rad(pitchErrorSum)
-
-			altitudePorportional = kpz * altitudeError
-
-			alt_velocity = abs(prev_alt - current_alt) / timeStep #Calculates alt_velocity WARNING: inaccurate measurement
-			altitudeDerivative = kdz * -alt_velocity #alt_velocity may be inaccurate or wrong testing is needed
-
-			altitudeErrorSum = altitudeErrorSum + (altitudeError + altitudeErrorPrev)*(timeStep/2.0) 
-
-			altitudeIntegral = kiz * altitudeErrorSum
 			
 		# -------------------------Kill Switch------------------------------------
 		# eveyrthing in here only happens when the switch is on (up)
@@ -600,76 +627,25 @@ while True:
 				rollErrorSum = 0
 			if(not zeroed):
 				rollErrorSum = 0
-				yawOffset = yaw
+				#yawOffset = yaw
 
 			Proll = rollProportional+rollIntegral+rollDerivative
 			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
-			#Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
-			#print("this is Paltitude:" + Paltitude)
-			#print rad2Deg(yawRel)
-			
-			counter = counter + 1
-			if(excitation):
-				timer=(time.time()-timein)
-				frequencySweep = math.sin(2*math.pi*timer*(.2+.001*n))
-				n=n+1
-				
-				motor_right = throttle - A * frequencySweep
-				motor_left = throttle + A * frequencySweep
-	
-			else:
-				#motor_right = 1.4 + sinr1 
-				#motor_left = 1.4 + sinr2 
-				#motor_front = 0
-				#motor_back = 0
-				motor_right = throttle - Proll
-				#print (motor_right)
-				motor_left = throttle + Proll
-				#print (motor_left)
-				motor_front = throttle + Ppitch
-				#print (motor_front)
-				motor_back = throttle - Ppitch
-				#print (motor_back)
-			zeroed = True
-		elif(float(rc_data[4]) < 1700.0 and float(rc_data[4]) > 1600): #not sure if this is the correct values
-			#altitude control enabled!!! WARNING
-			timer = time.time() - timein
-			if(rollErrorSum > .5):
-				rollErrorSum = 0
-			if(not zeroed):
-				rollErrorSum = 0
-				yawOffset = yaw
+			Pyaw = yawProportional+yawIntegral+yawDerivative
 
-			Proll = rollProportional+rollIntegral+rollDerivative
-			Ppitch = pitchProportional+pitchIntegral+pitchDerivative
-			Paltitude = altitudePorportional+altitudeIntegral+altitudeDerivative
-			#print("this is Paltitude:" + Paltitude)
-			#print rad2Deg(yawRel)
-			
 			counter = counter + 1
-			if(excitation):
-				timer=(time.time()-timein)
-				frequencySweep = math.sin(2*math.pi*timer*(.2+.001*n))
-				n=n+1
-				
-				motor_right = throttle - A * frequencySweep
-				motor_left = throttle + A * frequencySweep
-	
-			else:
-				#motor_right = 1.4 + sinr1 
-				#motor_left = 1.4 + sinr2 
-				#motor_front = 0
-				#motor_back = 0
-				motor_right = Paltitude - Proll
-				#print (motor_right)
-				motor_left = Paltitude + Proll
-				#print (motor_left)
-				motor_front = Paltitude + Ppitch
-				#print (motor_front)
-				motor_back = Paltitude - Ppitch
-				#print (motor_back)
+
+			#motor_right = throttle - Proll
+			#motor_left = throttle + Proll
+			#motor_front = throttle + Ppitch
+			#motor_back = throttle - Ppitch
+
+			motor_right = throttle - Proll - Pyaw
+			motor_left = throttle + Proll - Pyaw
+			motor_front = throttle + Ppitch + Pyaw
+			motor_back = throttle - Ppitch + Pyaw
+
 			zeroed = True
-			
 		else:
 			motor_right = 0
 			motor_left = 0
@@ -682,8 +658,8 @@ while True:
 		
 		pitchErrorPrev = pitchError
 		rollErrorPrev = rollError
-		#altitudeErrorPrev = altitudeError
-		
+		yawRateErrorPrev = yawRateError		
+		yawPrev = yaw
 		
 		
 		
@@ -715,8 +691,8 @@ while True:
 		
 		####		 END STUDENT SECTION				####
 		#---------------------------------------------------#
-		
-		
+
+
 		motor_front_pwm.set_duty_cycle(motor_front)
 		motor_back_pwm.set_duty_cycle(motor_back)
 		motor_left_pwm.set_duty_cycle(motor_left)
@@ -791,35 +767,21 @@ while True:
 	
 	if (current_time - timer_1hz) >= 1000.0:
 		# Customizable display message #
-		#print "Angles:", "{:+3.2f}".format(roll*57.32), "{:+3.2f}".format(pitch*57.32), "{:+3.2f}".format(yaw*57.32)
-		print("current roll: ",rad2Deg(roll))
-		print("roll error: ",rollError)
+		if democounter < 10:
+			throttle = 1
+		elif democounter > 10 and democounter < 20:
+			throttle = 1.5
+		elif democounter > 20 and democounter < 30:
+			rollDes = 10
+		elif democounter > 30 and democounter < 40:
+			pitchDes = 10
+			rollDes = 0
+		#elif democounter > 40 and democounter < 50:
+			#yawDes = 
+		else:
+			throttle = 1
 
-		print("current pitch: ",pitch)
-		print("pitch error: ",pitchError)
-		#print("target altitude:")
-		#print(target_alt)
-		#print("current altitude:")
-		#print(current_alt)
-		#print("altitude error:")
-		#print(altitudeError)
 
-		print("right motor value: ",motor_right)
-		print("left motor value: ", motor_left)
-		print("front motor value: ",motor_front)
-		print("back motor value: ",motor_back)
-
-		print("kp: ",kp," ki: ",ki," kd: ",kd)
-		#print "Analogs:", analog[0], analog[1], analog[2], analog[3], analog[4]
-		#print "Altitude:", current_alt
-		#print pitch_angle_gyro
-		#print roll_angle_acc
-		#print roll_angle_gyro
-		
-		#if GPS_data is not None:
-		#	print "Location:", "{:+3.6f}".format(GPS_data.lat/10000000.0), "{:+3.6f}".format(GPS_data.lon/10000000.0), "{:+4.1f}".format(GPS_data.heightSea/1000.0)
-		#	print "Loc Accuracy:", "{:+3.3f}".format(GPS_data.horAcc/1000.0), "{:+3.3f}".format(GPS_data.verAcc/1000.0)
-		#print pitch_angle_gyro
-		#print accels
+		democounter = democounter + 1
 		timer_1hz = current_time
 		# End of 1Hz section
