@@ -89,7 +89,7 @@ zeroed = False
 #kdy = 7.525825
 kpy = 0.4
 kiy = 0
-kdy = 0
+kdy = 0.015
 
 # ZN tuning
 kp = .12057
