@@ -771,20 +771,20 @@ while True:
 			print ("waiting")
 			throttle = 1
 		elif democounter >= 10 and democounter < 20:
-			throttle = 1.1
+			throttle = 1.25
 			print("throttle on")
 		elif democounter >= 20 and democounter < 30:
 			rollDes = 10
-			throttle = 1.1
+			throttle = 1.25
 			print("roll set to 10")
 		elif democounter >= 30 and democounter < 40:
 			pitchDes = 10
-			throttle = 1.1
+			throttle = 1.25
 			rollDes = 0
 			print("pitch set to 10")
 		elif democounter >= 40 and democounter < 45:
 			pitchDes = 0
-			throttle = 1.1
+			throttle = 1.2
 		else:
 			throttle = 1
 			print("Done")
