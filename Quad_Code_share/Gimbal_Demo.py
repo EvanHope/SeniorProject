@@ -768,18 +768,23 @@ while True:
 	if (current_time - timer_1hz) >= 1000.0:
 		# Customizable display message #
 		if democounter < 10:
+			print ("waiting")
 			throttle = 1
 		elif democounter > 10 and democounter < 20:
-			throttle = 1.5
+			throttle = 1.25
+			print("throttle on")
 		elif democounter > 20 and democounter < 30:
 			rollDes = 10
+			print("roll set to 10")
 		elif democounter > 30 and democounter < 40:
 			pitchDes = 10
 			rollDes = 0
+			print("pitch set to 10")
 		#elif democounter > 40 and democounter < 50:
 			#yawDes = 
 		else:
 			throttle = 1
+			print("Done")
 
 
 		democounter = democounter + 1
