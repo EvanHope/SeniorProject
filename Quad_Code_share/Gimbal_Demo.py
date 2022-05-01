@@ -790,6 +790,7 @@ while True:
 		elif democounter >= 55 and democounter < 60:
 			throttle = 1.2
 			pitchDes = 0
+			rollDes = 0
 		else:
 			throttle = 1
 			print("Done")
