@@ -5,6 +5,8 @@ import math
 import argparse 
 import sys
 import navio.util
+from picamera import PiCamera
+from time import sleep
 #import AccelGyroMag
 import navio.mpu9250 # For magnetometer calibration only
 import madgwickahrs.madgwickahrs as attitude
@@ -22,6 +24,11 @@ import bufferShawn
 import numIntegration
 import kalmanFilterPython
 
+
+#Camera
+camera = PiCamera()
+
+camera.rotation = 180
 # ----------------------------------------------------------------------
 # Nic and Shawn's variables -------------------------------START--------
 # ----------------------------------------------------------------------
@@ -793,6 +800,8 @@ while True:
 			throttle = 1.2
 		elif democounter >= 51 and democounter < 60:
 			throttle = 1.2
+		elif democounter >= 51 and democounter < 60:
+			camera.capture('/home/pi/Navio2/SeniorProject/Quad_Code_share/Pictures/image.jpg')
 		else:
 			throttle = 1
 			print("Done")
