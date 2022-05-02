@@ -800,7 +800,7 @@ while True:
 			throttle = 1.2
 		elif democounter >= 51 and democounter < 60:
 			throttle = 1.2
-		elif democounter >= 51 and democounter < 60:
+		elif democounter >= 60 and democounter < 61:
 			camera.capture('/home/pi/Navio2/SeniorProject/Quad_Code_share/Pictures/image.jpg')
 		else:
 			throttle = 1
