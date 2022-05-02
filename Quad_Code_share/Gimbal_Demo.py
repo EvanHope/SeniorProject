@@ -772,17 +772,14 @@ while True:
 			throttle = 1
 		elif democounter >= 10 and democounter < 20:
 			throttle = 1.2
-			print("throttle on")
 		elif democounter >= 20 and democounter < 30:
 			rollDes = 15
 			pitchDes = 15
 			throttle = 1.2
-			print("roll set to 10")
 		elif democounter >= 30 and democounter < 35:
 			rollDes = 0
 			pitchDes = 0
 			throttle = 1.2
-			print("pitch set to 10")
 		elif democounter >= 35 and democounter < 45:
 			pitchDes = 15
 			rollDes = -15
