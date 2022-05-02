@@ -791,6 +791,11 @@ while True:
 			throttle = 1.2
 			pitchDes = 0
 			rollDes = 0
+		elif democounter >= 50 and democounter < 51:
+			yawDes = -yaw
+			throttle = 1.2
+		elif democounter >= 51 and democounter < 60:
+			throttle = 1.2
 		else:
 			throttle = 1
 			print("Done")
