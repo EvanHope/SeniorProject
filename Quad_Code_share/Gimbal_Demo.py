@@ -794,7 +794,7 @@ while True:
 		#log_data = time.clock(), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError,
 		#rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle
 		#np.savetxt(fh, log_data.reshape(1,log_data.shape[0]), delimiter=',', fmt='%.6f')
-		#fh.write(log_data)
+		fh.write(log_data)
 		
 		fh.close()
 		print("I SHOULD BE WRITING TEXT TO DATA LOG")
