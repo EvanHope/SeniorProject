@@ -788,7 +788,7 @@ while True:
 		fh = open("Log_Files/datalog%s.csv" % gg,"a")
 		log_data = np.array([time.clock(), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError,
 		rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle])
-		np.savetxt(fh, log_data, delimiter=',', fmt='%.6f')
+		np.savetxt(fh, log_data, delimiter=',')
 		
 		fh.close()
 
