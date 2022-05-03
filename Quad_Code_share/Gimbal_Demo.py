@@ -786,9 +786,12 @@ while True:
 		# of the program. Add/subtract variables as needed.
 		#header_string = "Time, roll, rollrate, rollDesired, rerror, pitch, pitchRate, pitchDesired,perror, yaw, yawRate, yawDesired,yerror, throttle\n"
 		fh = open("Log_Files/datalog%s.csv" % gg,"a")
-		log_data = np.array([time.clock(), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError,
-		rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle])
-		np.savetxt(fh, log_data, delimiter=',')
+		#log_data = np.array([time.clock(), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError,
+		#rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle])
+		log_data = time.clock(), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError,
+		rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle
+		#np.savetxt(fh, log_data, delimiter=',')
+		fh.write(log_data)
 		
 		fh.close()
 
