@@ -786,13 +786,16 @@ while True:
 		# of the program. Add/subtract variables as needed.
 		#header_string = "Time, roll, rollrate, rollDesired, rerror, pitch, pitchRate, pitchDesired,perror, yaw, yawRate, yawDesired,yerror, throttle\n"
 		fh = open("Log_Files/datalog%s.csv" % gg,"a")
-		log_data = str(time.clock()), ",", str(rad2Deg(roll)), ",", str(rad2Deg(rates[1])), ",", str(rollDes), ",", str(rollError), ",", 
+		#log_data = str(time.clock()), ",", str(rad2Deg(roll)), ",", str(rad2Deg(rates[1])), ",", str(rollDes), ",", str(rollError), ",", 
+		#str(rad2Deg(pitch)), ",", str(rad2Deg(rates[0])), ",", str(pitchDes), ",", str(pitchError), 
+		#",", str(rad2Deg(yaw)), ",", str(rad2Deg(rates[2])), ",", str(yawDes), ",", str(yawError), ",", str(throttle), "\n"
+		print(str(time.clock()), ",", str(rad2Deg(roll)), ",", str(rad2Deg(rates[1])), ",", str(rollDes), ",", str(rollError), ",", 
 		str(rad2Deg(pitch)), ",", str(rad2Deg(rates[0])), ",", str(pitchDes), ",", str(pitchError), 
-		",", str(rad2Deg(yaw)), ",", str(rad2Deg(rates[2])), ",", str(yawDes), ",", str(yawError), ",", str(throttle), "\n"
+		",", str(rad2Deg(yaw)), ",", str(rad2Deg(rates[2])), ",", str(yawDes), ",", str(yawError), ",", str(throttle), "\n")
 		#log_data = time.clock(), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError,
 		#rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle
 		#np.savetxt(fh, log_data.reshape(1,log_data.shape[0]), delimiter=',', fmt='%.6f')
-		fh.write(log_data)
+		#fh.write(log_data)
 		
 		fh.close()
 		print("I SHOULD BE WRITING TEXT TO DATA LOG")
@@ -823,7 +826,7 @@ while True:
 			pitchDes = 0
 			rollDes = 0
 		elif democounter >= 50 and democounter < 51:
-			yawDes = -yaw
+			yawDes = rad2Deg(-yaw)
 			throttle = 1.2
 		elif democounter >= 51 and democounter < 60:
 			throttle = 1.2
