@@ -786,7 +786,7 @@ while True:
 		# of the program. Add/subtract variables as needed.
 		#header_string = "Time, roll, rollrate, rollDesired, rerror, pitch, pitchRate, pitchDesired,perror, yaw, yawRate, yawDesired,yerror, throttle\n"
 		fh = open("Log_Files/datalog%s.csv" % gg,"a")
-		log_data = "{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(time.clock(), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, 
+		log_data = "{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(str(time.clock()), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, 
 		rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError, rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle)
 		#print(str(time.clock()), ",", str(rad2Deg(roll)), ",", str(rad2Deg(rates[1])), ",", str(rollDes), ",", str(rollError), ",", 
 		#str(rad2Deg(pitch)), ",", str(rad2Deg(rates[0])), ",", str(pitchDes), ",", str(pitchError), 
