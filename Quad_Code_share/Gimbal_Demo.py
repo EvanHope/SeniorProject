@@ -778,6 +778,20 @@ while True:
 #		fh.close()
 #		####			END LOGGING				####
 #		
+
+		fh = open("Log_Files/datalog%s.csv" % gg,"a")
+		#log_data = np.array([time.clock(), GPS_data.lat/10000000.0, GPS_data.lon/10000000.0,
+		#### 			LOGGING 				####
+		# This is the data to be logged. The header (text at top of file) is edited at the top
+		# of the program. Add/subtract variables as needed.
+		#header_string = "Time, roll, rollrate, rollDesired, rerror, pitch, pitchRate, pitchDesired,perror, yaw, yawRate, yawDesired,yerror, throttle\n"
+
+		log_data = np.array([time.clock(), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError,
+		rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle])
+		np.savetxt(fh, log_data.reshape(1,log_data.shape[0]), delimiter=',', fmt='%.6f')
+		
+		fh.close()
+		
 		timer_10hz = current_time
 		# End of 10Hz section
 	
@@ -817,19 +831,6 @@ while True:
 
 
 		democounter = democounter + 1
-
-		fh = open("Log_Files/datalog%s.csv" % gg,"a")
-		#log_data = np.array([time.clock(), GPS_data.lat/10000000.0, GPS_data.lon/10000000.0,
-		#### 			LOGGING 				####
-		# This is the data to be logged. The header (text at top of file) is edited at the top
-		# of the program. Add/subtract variables as needed.
-		#header_string = "Time, roll, rollrate, rollDesired, rerror, pitch, pitchRate, pitchDesired,perror, yaw, yawRate, yawDesired,yerror, throttle\n"
-
-		log_data = np.array([time.clock(), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError,
-		rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle])
-		np.savetxt(fh, log_data.reshape(1,log_data.shape[0]), delimiter=',', fmt='%.6f')
-		
-		fh.close()
 
 		timer_1hz = current_time
 		# End of 1Hz section
