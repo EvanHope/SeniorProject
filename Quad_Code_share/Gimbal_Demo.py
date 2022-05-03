@@ -24,6 +24,15 @@ import bufferShawn
 import numIntegration
 import kalmanFilterPython
 
+#Data Logging
+gg = 0
+while os.path.exists("Log_Files/datalog%s.csv" % gg):
+	gg+=1
+#header_string = "rates, motor right, motoro left\n"
+header_string = "Time, roll, rollrate, rollDesired, rollError, pitch, pitchRate, pitchDesired, pitchError, yaw, yawRate, yawDesired, yawError, throttle\n"
+fh = open("Log_Files/datalog%s.csv" % gg,"a")
+fh.write(header_string)
+fh.close()
 
 #Camera
 camera = PiCamera()
@@ -410,7 +419,7 @@ throttle = 1
 yawRateDes = 0
 
 yaw,roll,pitch = quat2euler(AHRS_data.quaternion,axes='rzxy')
-yawDes = yaw
+yawDes = rad2Deg(yaw)
 democounter = 0
 
 print ("Starting main loop: here we go!")
@@ -580,7 +589,7 @@ while True:
 		rollError = rollDes - rad2Deg(roll)
 		pitchError = pitchDes - rad2Deg(pitch)
 		yawRateError = yawRateDes - rates[2]
-		yawError = yawDes - yaw
+		yawError = rad2Deg(yawDes) - rad2Deg(yaw)
 		#print(current_alt)
 		#print(altitudeError)
 
@@ -808,5 +817,18 @@ while True:
 
 
 		democounter = democounter + 1
+
+		fh = open("Log_Files/datalog%s.csv" % gg,"a")
+		#log_data = np.array([time.clock(), GPS_data.lat/10000000.0, GPS_data.lon/10000000.0,
+		#### 			LOGGING 				####
+		# This is the data to be logged. The header (text at top of file) is edited at the top
+		# of the program. Add/subtract variables as needed.
+		#header_string = "Time, roll, rollrate, rollDesired, rerror, pitch, pitchRate, pitchDesired,perror, yaw, yawRate, yawDesired,yerror, throttle\n"
+
+		log_data = np.array([time.clock(), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, rad2Deg(pitch),])
+		np.savetxt(fh, log_data.reshape(1,log_data.shape[0]), delimiter=',', fmt='%.6f')
+		
+		fh.close()
+
 		timer_1hz = current_time
 		# End of 1Hz section

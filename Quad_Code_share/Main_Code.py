@@ -396,7 +396,7 @@ yawRateErrorPrev = 0
 yawErrorPrev = 0
 
 yaw,roll,pitch = quat2euler(AHRS_data.quaternion,axes='rzxy')
-yawDes = yaw
+yawDes = rad2Deg(yaw)
 
 
 print ("Starting main loop: here we go!")
@@ -566,7 +566,7 @@ while True:
 		rollError = rollDes - rad2Deg(roll)
 		pitchError = pitchDes - rad2Deg(pitch)
 		yawRateError = yawRateDes - rates[2]
-		yawError = yawDes - yaw
+		yawError = yawDes - rad2Deg(yaw)
 		#print(current_alt)
 		#print(altitudeError)
 
