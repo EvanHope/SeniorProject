@@ -789,7 +789,7 @@ while True:
 		log_data = "{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(str(time.clock()), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, 
 		rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError, rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle)
 		print(log_data)
-		fh = open("Log_Files/datalog%s.csv" % gg,"a")
+		fh = open("Log_Files/datalog%s.csv" % gg,"w")
 		fh.write(log_data)
 		fh.close()
 		#print(str(time.clock()), ",", str(rad2Deg(roll)), ",", str(rad2Deg(rates[1])), ",", str(rollDes), ",", str(rollError), ",", 
@@ -798,7 +798,6 @@ while True:
 		#log_data = time.clock(), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError,
 		#rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle
 		#np.savetxt(fh, log_data.reshape(1,log_data.shape[0]), delimiter=',', fmt='%.6f')
-		print("I SHOULD BE WRITING TEXT TO DATA LOG")
 		timer_10hz = current_time
 		# End of 10Hz section
 	
