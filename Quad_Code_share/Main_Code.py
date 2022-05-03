@@ -89,7 +89,7 @@ zeroed = False
 #kdy = 7.525825
 kpy = 0.4
 kiy = 0.05
-kdy = 0.0
+kdy = 0.0001
 
 # ZN tuning
 kp = .12057
@@ -635,8 +635,8 @@ while True:
 
 			motor_right = throttle - Proll + Pyaw
 			motor_left = throttle + Proll + Pyaw
-			motor_front = throttle + Ppitch
-			motor_back = throttle - Ppitch
+			motor_front = throttle + Ppitch - Pyaw
+			motor_back = throttle - Ppitch - Pyaw
 
 			zeroed = True
 		else:
