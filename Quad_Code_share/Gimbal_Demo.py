@@ -786,19 +786,18 @@ while True:
 		# This is the data to be logged. The header (text at top of file) is edited at the top
 		# of the program. Add/subtract variables as needed.
 		#header_string = "Time, roll, rollrate, rollDesired, rerror, pitch, pitchRate, pitchDesired,perror, yaw, yawRate, yawDesired,yerror, throttle\n"
-		fh = open("Log_Files/datalog%s.csv" % gg,"a")
 		log_data = "{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(str(time.clock()), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, 
 		rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError, rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle)
 		print(log_data)
+		fh = open("Log_Files/datalog%s.csv" % gg,"a")
+		fh.write(log_data)
+		fh.close()
 		#print(str(time.clock()), ",", str(rad2Deg(roll)), ",", str(rad2Deg(rates[1])), ",", str(rollDes), ",", str(rollError), ",", 
 		#str(rad2Deg(pitch)), ",", str(rad2Deg(rates[0])), ",", str(pitchDes), ",", str(pitchError), 
 		#",", str(rad2Deg(yaw)), ",", str(rad2Deg(rates[2])), ",", str(yawDes), ",", str(yawError), ",", str(throttle), "\n")
 		#log_data = time.clock(), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError,
 		#rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle
 		#np.savetxt(fh, log_data.reshape(1,log_data.shape[0]), delimiter=',', fmt='%.6f')
-		fh.write(log_data)
-		
-		fh.close()
 		print("I SHOULD BE WRITING TEXT TO DATA LOG")
 		timer_10hz = current_time
 		# End of 10Hz section
