@@ -1,9 +1,13 @@
+from cmath import log
 import time
+from wsgiref.simple_server import demo_app
 import spidev
 import math
 import argparse 
 import sys
 import navio.util
+from picamera import PiCamera
+from time import sleep
 #import AccelGyroMag
 import navio.mpu9250 # For magnetometer calibration only
 import madgwickahrs.madgwickahrs as attitude
@@ -21,6 +25,21 @@ import bufferShawn
 import numIntegration
 import kalmanFilterPython
 
+#Data Logging
+gg = 0
+while os.path.exists("Log_Files/datalog%s.txt" % gg):
+	gg+=1
+#header_string = "rates, motor right, motoro left\n"
+header_string = "Time, roll, rollrate, rollDesired, rollError, pitch, pitchRate, pitchDesired, pitchError, yaw, yawRate, yawDesired, yawError, throttle\n"
+fh = open("home/pi/Navio2/SeniorProject/Quad_Code_share/Log_Files/datalog%s.txt" % gg,"a")
+fh.write(header_string)
+#fh.close()
+fh.flush()
+
+#Camera
+camera = PiCamera()
+
+camera.rotation = 180
 # ----------------------------------------------------------------------
 # Nic and Shawn's variables -------------------------------START--------
 # ----------------------------------------------------------------------
@@ -87,9 +106,9 @@ zeroed = False
 #kpy = 19.39823
 #kiy = .387965
 #kdy = 7.525825
-kpy = 0.4
-kiy = 0.05
-kdy = 0.0001
+kpy = 0.2
+kiy = 0
+kdy = 0
 
 # ZN tuning
 kp = .12057
@@ -395,9 +414,15 @@ yawErrorSum = 0
 yawRateErrorPrev = 0
 yawErrorPrev = 0
 
+rollDes = 0
+pitchDes = 0
+throttle = 1
+#throttle = 1.1 #for testing motors
+yawRateDes = 0
+
 yaw,roll,pitch = quat2euler(AHRS_data.quaternion,axes='rzxy')
 yawDes = yaw
-
+democounter = 0
 
 print ("Starting main loop: here we go!")
 while True:
@@ -421,14 +446,6 @@ while True:
 		rates2[2] = -rates[2]
 		AHRS_data.update_imu(rates2, accels2)
 		yaw,roll,pitch = quat2euler(AHRS_data.quaternion,axes='rzxy')
-		#print("yawbefore",rad2Deg(yaw))
-		#yaw = rad2Deg(yaw)
-		#yaw = yaw + 100.1
-		#print("yaw after",yaw)
-
-		#yaw = deg2Rad(yaw)
-		#print("yaw after after",rad2Deg(yaw))
-
 		baro_timer = baro_timer + 1
 		if (baro_timer == 1): baro.refreshPressure()
 		elif (baro_timer == 2): baro.readPressure()
@@ -527,14 +544,14 @@ while True:
 
 		#uncomment for pitch and roll controller control:
 		#set rollDes and PitchDes to 0 to ensure drone always tries to stay stable
-		rollDes = rangeD(float(rc_data[0]),rc0c)
-		pitchDes = rangeD(float(rc_data[1]),rc0c)
-		throttle = rangeD(float(rc_data[2]),rc2c)
+		#rollDes = rangeD(float(rc_data[0]),rc0c)
+		#pitchDes = rangeD(float(rc_data[1]),rc0c)
+		#throttle = rangeD(float(rc_data[2]),rc2c)
 		#rollDes = 0
 		#pitchDes = 0
 		#throttle = 1
 		#throttle = 1.1 #for testing motors
-		yawRateDes = 0
+		#yawRateDes = 0
 		#yawDes = 0 # this is set right before main loop temp
 		
 		if rollDes < 7 and rollDes >-7:
@@ -763,48 +780,55 @@ while True:
 #		fh.close()
 #		####			END LOGGING				####
 #		
+
+		
+		#log_data = np.array([time.clock(), GPS_data.lat/10000000.0, GPS_data.lon/10000000.0,
+		#### 			LOGGING 				####
+		# This is the data to be logged. The header (text at top of file) is edited at the top
+		# of the program. Add/subtract variables as needed.
+		#header_string = "Time, roll, rollrate, rollDesired, rerror, pitch, pitchRate, pitchDesired,perror, yaw, yawRate, yawDesired,yerror, throttle\n"
+		log_data = "{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(str(time.clock()), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, 
+		rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError, rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle)
+		#print(log_data)
+		#fh = open("Log_Files/datalog%s.txt" % gg,"w")
+		fh.write(log_data)
+		fh.flush()
+		#np.savetxt(fh, log_data.reshape(1,log_data.shape[0]), delimiter=',', fmt='%.6f')
 		timer_10hz = current_time
 		# End of 10Hz section
 	
 	if (current_time - timer_1hz) >= 1000.0:
 		# Customizable display message #
-		#print "Angles:", "{:+3.2f}".format(roll*57.32), "{:+3.2f}".format(pitch*57.32), "{:+3.2f}".format(yaw*57.32)
-		print("current roll:")
-		print(rad2Deg(roll))
-		print("roll error:")
-		print(rollError)
+		if democounter < 10:
+			print ("waiting")
+			throttle = 1
+		elif democounter >= 10 and democounter < 20:
+			throttle = 1.2
+		elif democounter >= 20 and democounter < 30:
+			rollDes = 15
+			throttle = 1.2
+		elif democounter >= 30 and democounter < 35:
+			rollDes = 0
+			throttle = 1.2
+		elif democounter >= 35 and democounter < 45:
+			pitchDes = 15
+			throttle = 1.2
+		elif democounter >= 45 and democounter < 50:
+			throttle = 1.2
+			pitchDes = 0
+		elif democounter >= 50 and democounter < 51:
+			yawDes = -yaw
+			throttle = 1.2
+		elif democounter >= 51 and democounter < 60:
+			throttle = 1.2
+		elif democounter >= 60 and democounter < 61:
+			camera.capture('/home/pi/Navio2/SeniorProject/Quad_Code_share/Pictures/image.jpg')
+		else:
+			throttle = 1
+			print("Done")
 
-		print("current pitch:")
-		print(rad2Deg(pitch))
-		print("pitch error:")
-		print(pitchError)
 
-		print("yaw: ",rad2Deg(yaw))
-		print("Yaw Error: ", yawError)
-		print("Yaw Desired:", rad2Deg(yawDes))
-		print("Pyaw: ",Pyaw)
-		print("YawPorportional: ", yawProportional)
-		print("yaw rate:", rad2Deg(rates[2]))
+		democounter = democounter + 1
 
-
-		print("right motor value:")
-		print (motor_right)
-		print("left motor value:")
-		print (motor_left)
-		print("front motor value:")
-		print (motor_front)
-		print("back motor value:")
-		print (motor_back)
-		#print "Analogs:", analog[0], analog[1], analog[2], analog[3], analog[4]
-		#print "Altitude:", current_alt
-		#print pitch_angle_gyro
-		#print roll_angle_acc
-		#print roll_angle_gyro
-		
-		#if GPS_data is not None:
-		#	print "Location:", "{:+3.6f}".format(GPS_data.lat/10000000.0), "{:+3.6f}".format(GPS_data.lon/10000000.0), "{:+4.1f}".format(GPS_data.heightSea/1000.0)
-		#	print "Loc Accuracy:", "{:+3.3f}".format(GPS_data.horAcc/1000.0), "{:+3.3f}".format(GPS_data.verAcc/1000.0)
-		#print pitch_angle_gyro
-		#print accels
 		timer_1hz = current_time
 		# End of 1Hz section
