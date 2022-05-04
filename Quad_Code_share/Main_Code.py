@@ -426,6 +426,8 @@ while True:
 		print("yaw after",yaw)
 
 		yaw = deg2Rad(yaw)
+		print("yaw after after",rad2Deg(yaw))
+
 		baro_timer = baro_timer + 1
 		if (baro_timer == 1): baro.refreshPressure()
 		elif (baro_timer == 2): baro.readPressure()
