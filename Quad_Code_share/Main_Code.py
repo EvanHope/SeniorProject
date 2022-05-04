@@ -237,7 +237,7 @@ print ("Initializing Sensors")
 imu = navio.mpu9250.MPU9250()
 imu.initialize()
 rcin = navio.rcinput.RCInput()
-AHRS_data = attitude.AHRS(0.01) #100Hz sensor attitude estimation FIXED 
+AHRS_data = attitude.AHRS(0.0) #100Hz sensor attitude estimation FIXED 
 ## GPS Disabled
 #GPS = GPS.U_blox()
 #for ind in range(0, 10):
@@ -422,11 +422,11 @@ while True:
 		AHRS_data.update_imu(rates2, accels2)
 		yaw,roll,pitch = quat2euler(AHRS_data.quaternion,axes='rzxy')
 		#print("yawbefore",rad2Deg(yaw))
-		yaw = rad2Deg(yaw)
-		yaw = yaw + 100.1
+		#yaw = rad2Deg(yaw)
+		#yaw = yaw + 100.1
 		#print("yaw after",yaw)
 
-		yaw = deg2Rad(yaw)
+		#yaw = deg2Rad(yaw)
 		#print("yaw after after",rad2Deg(yaw))
 
 		baro_timer = baro_timer + 1
