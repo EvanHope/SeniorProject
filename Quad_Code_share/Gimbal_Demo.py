@@ -27,11 +27,11 @@ import kalmanFilterPython
 
 #Data Logging
 gg = 0
-while os.path.exists("Log_Files/datalog%s.csv" % gg):
+while os.path.exists("Log_Files/datalog%s.txt" % gg):
 	gg+=1
 #header_string = "rates, motor right, motoro left\n"
 header_string = "Time, roll, rollrate, rollDesired, rollError, pitch, pitchRate, pitchDesired, pitchError, yaw, yawRate, yawDesired, yawError, throttle\n"
-fh = open("Log_Files/datalog%s.csv" % gg,"a")
+fh = open("Log_Files/datalog%s.txt" % gg,"a")
 fh.write(header_string)
 fh.close()
 
@@ -789,7 +789,7 @@ while True:
 		log_data = "{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(str(time.clock()), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, 
 		rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError, rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle)
 		print(log_data)
-		fh = open("Log_Files/datalog%s.csv" % gg,"w")
+		fh = open("Log_Files/datalog%s.txt" % gg,"w")
 		fh.write(log_data)
 		fh.close()
 		#print(str(time.clock()), ",", str(rad2Deg(roll)), ",", str(rad2Deg(rates[1])), ",", str(rollDes), ",", str(rollError), ",", 
