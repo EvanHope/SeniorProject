@@ -27,7 +27,7 @@ import kalmanFilterPython
 
 #Data Logging
 gg = 0
-while os.path.exists("Log_Files/datalog%s.txt" % gg):
+while os.path.exists("home/pi/Navio2/SeniorProject/Quad_Code_share/Log_Files/datalog%s.txt" % gg):
 	gg+=1
 #header_string = "rates, motor right, motoro left\n"
 header_string = "Time, roll, rollrate, rollDesired, rollError, pitch, pitchRate, pitchDesired, pitchError, yaw, yawRate, yawDesired, yawError, throttle\n"
