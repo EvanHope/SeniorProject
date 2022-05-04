@@ -773,10 +773,10 @@ while True:
 
 		print("yaw: ",rad2Deg(yaw))
 		print("Yaw Error: ", yawError)
-		print("Yaw Desired:", yawDes)
+		print("Yaw Desired:", rad2Deg(yawDes))
 		print("Pyaw: ",Pyaw)
 		print("YawPorportional: ", yawProportional)
-		print("rate[2]:", rad2Deg(rates[2]))
+		print("yaw rate:", rad2Deg(rates[2]))
 
 
 		print("right motor value:")
