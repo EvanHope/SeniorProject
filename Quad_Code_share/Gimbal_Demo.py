@@ -31,7 +31,7 @@ while os.path.exists("Log_Files/datalog%s.txt" % gg):
 	gg+=1
 #header_string = "rates, motor right, motoro left\n"
 header_string = "Time, roll, rollrate, rollDesired, rollError, pitch, pitchRate, pitchDesired, pitchError, yaw, yawRate, yawDesired, yawError, throttle\n"
-fh = open("Log_Files/datalog%s.txt" % gg,"w")
+fh = open("Log_Files/datalog%s.txt" % gg,"a")
 fh.write(header_string)
 fh.close()
 
