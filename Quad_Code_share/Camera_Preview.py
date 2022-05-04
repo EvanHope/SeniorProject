@@ -5,6 +5,6 @@ camera = PiCamera()
 
 camera.rotation = 180
 camera.start_preview()
-#sleep(5)
+sleep(200)
 #camera.capture('/home/pi/Navio2/SeniorProject/Quad_Code_share/Pictures/image.jpg')
-#camera.stop_preview()
+camera.stop_preview()
