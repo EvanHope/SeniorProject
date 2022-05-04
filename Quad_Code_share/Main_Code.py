@@ -423,7 +423,7 @@ while True:
 		yaw,roll,pitch = quat2euler(AHRS_data.quaternion,axes='rzxy')
 		#print("yawbefore",rad2Deg(yaw))
 		yaw = rad2Deg(yaw)
-		yaw = yaw + 1.1
+		yaw = yaw + 100.1
 		#print("yaw after",yaw)
 
 		yaw = deg2Rad(yaw)
