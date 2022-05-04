@@ -237,7 +237,7 @@ print ("Initializing Sensors")
 imu = navio.mpu9250.MPU9250()
 imu.initialize()
 rcin = navio.rcinput.RCInput()
-AHRS_data = attitude.AHRS(0.001) #100Hz sensor attitude estimation FIXED 
+AHRS_data = attitude.AHRS(0.0095) #100Hz sensor attitude estimation FIXED 
 ## GPS Disabled
 #GPS = GPS.U_blox()
 #for ind in range(0, 10):
