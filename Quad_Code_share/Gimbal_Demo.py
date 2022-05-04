@@ -821,7 +821,12 @@ while True:
 			pitchDes = 0
 			rollDes = 0
 		elif democounter >= 50 and democounter < 51:
-			yawDes = -yaw
+			yawDes = rad2Deg(yaw) + 180
+			if yawDes >= 180:
+				yawDes = yawDes - 360
+			elif yawDes <= -180:
+				yawDes = yawDes + 360
+			yawDes = deg2Rad(yawDes)
 			throttle = 1.2
 		elif democounter >= 51 and democounter < 60:
 			throttle = 1.2
