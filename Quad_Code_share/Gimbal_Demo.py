@@ -421,7 +421,7 @@ throttle = 1
 yawRateDes = 0
 
 yaw,roll,pitch = quat2euler(AHRS_data.quaternion,axes='rzxy')
-yawDes = rad2Deg(yaw)
+yawDes = yaw
 democounter = 0
 
 print ("Starting main loop: here we go!")
