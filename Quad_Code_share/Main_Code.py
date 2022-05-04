@@ -422,10 +422,10 @@ while True:
 		AHRS_data.update_imu(rates2, accels2)
 		yaw,roll,pitch = quat2euler(AHRS_data.quaternion,axes='rzxy')
 		#print("yawbefore",rad2Deg(yaw))
-		yaw = rad2Deg(yaw) + 1.1
+		#yaw = rad2Deg(yaw) + 1.1
 		#print("yaw after",yaw)
 
-		yaw = deg2Rad(yaw)
+		#yaw = deg2Rad(yaw)
 		#print("yaw after after",rad2Deg(yaw))
 
 		baro_timer = baro_timer + 1
