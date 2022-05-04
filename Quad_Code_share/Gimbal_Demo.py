@@ -789,8 +789,8 @@ while True:
 		log_data = "{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(str(time.clock()), rad2Deg(roll), rad2Deg(rates[1]), rollDes, rollError, 
 		rad2Deg(pitch), rad2Deg(rates[0]), pitchDes, pitchError, rad2Deg(yaw), rad2Deg(rates[2]), yawDes, yawError, throttle)
 		print(log_data)
-		fh = open("Log_Files/datalog%s.txt" % gg,"a")
-		fh.write("test")
+		fh = open("Log_Files/datalog%s.txt" % gg,"w")
+		fh.write(log_data)
 		fh.close()
 		#np.savetxt(fh, log_data.reshape(1,log_data.shape[0]), delimiter=',', fmt='%.6f')
 		timer_10hz = current_time
