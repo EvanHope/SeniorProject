@@ -799,32 +799,28 @@ while True:
 	
 	if (current_time - timer_1hz) >= 1000.0:
 		# Customizable display message #
-		if democounter < 10:
+		if democounter < 5:
 			print ("waiting")
 			throttle = 1
-		elif democounter >= 10 and democounter < 20:
+		elif democounter >= 5 and democounter < 15:
 			throttle = 1.2
-		elif democounter >= 20 and democounter < 30:
+		elif democounter >= 15 and democounter < 25:
 			rollDes = 15
 			pitchDes = 15
 			throttle = 1.2
-		elif democounter >= 30 and democounter < 35:
+		elif democounter >= 25 and democounter < 30:
 			rollDes = 0
 			pitchDes = 0
 			throttle = 1.2
-		elif democounter >= 35 and democounter < 45:
+		elif democounter >= 30 and democounter < 40:
 			pitchDes = 15
 			rollDes = -15
 			throttle = 1.2
-		elif democounter >= 45 and democounter < 50:
+		elif democounter >= 40 and democounter < 50:
 			throttle = 1.2
 			pitchDes = 0
 			rollDes = 0
 		elif democounter >= 50 and democounter < 51:
-			throttle = 1.2
-		elif democounter >= 51 and democounter < 60:
-			throttle = 1.2
-		elif democounter >= 60 and democounter < 61:
 			camera.capture('/home/pi/Navio2/SeniorProject/Quad_Code_share/Pictures/image.jpg')
 		else:
 			throttle = 1
