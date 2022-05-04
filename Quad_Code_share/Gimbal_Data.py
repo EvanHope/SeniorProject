@@ -27,7 +27,7 @@ import kalmanFilterPython
 
 #Data Logging
 gg = 0
-while os.path.exists("Log_Files/datalog%s.txt" % gg):
+while os.path.exists("/home/pi/Navio2/SeniorProject/Quad_Code_share/Log_Files/datalog%s.txt" % gg):
 	gg+=1
 #header_string = "rates, motor right, motoro left\n"
 header_string = "Time, roll, rollrate, rollDesired, rollError, pitch, pitchRate, pitchDesired, pitchError, yaw, yawRate, yawDesired, yawError, throttle\n"
@@ -817,12 +817,6 @@ while True:
 			throttle = 1.2
 			pitchDes = 0
 		elif democounter >= 50 and democounter < 51:
-			yawDes = rad2Deg(yaw) + 180
-			if yawDes >= 180:
-				yawDes = yawDes - 360
-			elif yawDes <= -180:
-				yawDes = yawDes + 360
-			yawDes = deg2Rad(yawDes)
 			throttle = 1.2
 		elif democounter >= 51 and democounter < 60:
 			throttle = 1.2

@@ -1,1 +1,0 @@
-Time, roll, rollrate, rollDesired, rollError, pitch, pitchRate, pitchDesired, pitchError, yaw, yawRate, yawDesired, yawError, throttle
